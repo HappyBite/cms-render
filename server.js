@@ -16,8 +16,7 @@ swig.setDefaults({ cache: false });
 // Don't leave both of these to false in production!
 
 app.get('/', function (req, res) {
-  console.log('asdfasdfasdf');
-  res.render('index', { name: 'Gabriel Lantz är underbart lycklig : )' });
+  res.render('index', { name: 'Swig templates are here to stay : )' });
 });
 
 app.listen(3000);
