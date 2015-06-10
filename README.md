@@ -1,8 +1,8 @@
-# cms-render
+# CMS Render
 General render app for CMS Node
 
 ## Install
-Run npm install
+Run npm install in terminal
 
 ## Start
-Run npm run start
+Run npm run start in terminal
