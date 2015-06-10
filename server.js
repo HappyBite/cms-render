@@ -1,4 +1,5 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var swig = require('swig');
 
 // This is where all the magic happens!
@@ -15,9 +16,13 @@ swig.setDefaults({ cache: false });
 // NOTE: You should always cache templates in a production environment.
 // Don't leave both of these to false in production!
 
+app.set('port', (process.env.PORT || 5000));
+app.use(express.static(__dirname + '/public'));
+
 app.get('/', function (req, res) {
   res.render('index', { name: 'Swig templates are here to stay : )' });
 });
 
-app.listen(3000);
-console.log('Application Started on http://localhost:3000');
+app.listen(app.get('port'), function() {
+  console.log('Node app is running on port', app.get('port'));
+});
