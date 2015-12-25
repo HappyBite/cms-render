@@ -2,8 +2,6 @@ var express = require('express');
 var app = express();
 var swig = require('swig');
 
-// hehe
-
 // This is where all the magic happens!
 app.engine('html', swig.renderFile);
 
