@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var swig = require('swig');
 
+// hehe
+
 // This is where all the magic happens!
 app.engine('html', swig.renderFile);
 
@@ -20,7 +22,7 @@ app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
-  res.render('index', { name: 'Swig templates are here to stay : )', time: process.env.TIMES });
+  res.render('index', { name: 'Swig templates are here to stay fasdfasdf : )', time: process.env.TIMES });
 });
 
 app.listen(app.get('port'), function() {
