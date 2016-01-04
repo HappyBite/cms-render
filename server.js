@@ -4,6 +4,11 @@ var swig = require('swig');
 var filters = require('./swig-extensions/filters.js');
 var loadApplication = require('./load-application.js');
 
+// set config 
+var nconf = require('nconf');
+nconf.argv().env();
+nconf.add('system', {type: 'file', file: 'dummy: has to be here for get set to work'});
+
 // This is where all the magic happens!
 app.engine('html', swig.renderFile);
 
