@@ -8,13 +8,17 @@
   },
   "scripts": {
     "start": "node server",
-    "start-dev": "node server"
+    "start-dev": "grunt"
   },
   "author": "Gabriel Lantz <cms.io>",
   "license": "MIT",
   "dependencies": {
+    "async": "^0.9.0",
+    "body-parser": "~1.0.1",
     "express": "^4.12.4",
-    "swig": "^1.4.2"
+    "nconf": "^0.7.1",
+    "swig": "^1.4.2",
+    "sync": "^0.2.5"
   },
   "devDependencies": {
     "grunt-concurrent": "^1.0.0",
