@@ -149,7 +149,7 @@ module.exports = function(app) {
     //console.log(url.substring(url.length - 1, url.length));
     //console.log(url.substring(0, url.length - 1));
     if (!~url.indexOf('.')) {
-      //res.header('Cache-Control', 'max-age=60, must-revalidate');
+      res.header('Cache-Control', 'max-age=60, must-revalidate');
       return res.render('index', model);
     }
     next();
