@@ -22,7 +22,7 @@ app.set('views', __dirname + '/template');
 // that and use Express's caching instead, if you like:
 app.set('view cache', true);
 // To disable Swig's cache, do the following:   
-//swig.setDefaults({ cache: false });
+swig.setDefaults({ cache: false });
 // NOTE: You should always cache templates in a production environment.
 // Don't leave both of these to false in production!
 
@@ -33,10 +33,10 @@ app.use(compression());
 
 // the static middleware must come after the sass middleware
 var cacheFor = -1;
-if(process.env.PUBLIC) {
+//if(process.env.PUBLIC) {
   // Strange flickering effect when caching files. Explore why this is happening.
   cacheFor = 86400000; // one day
-}
+//}
 //app.use(express.static( path.join( __dirname, '/template/assets' ), { maxAge: cacheFor }));
 app.use('/assets', express.static( path.join( __dirname, 'template/assets' ), { maxAge: cacheFor }));
 
