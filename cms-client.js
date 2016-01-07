@@ -10,7 +10,7 @@ if(process.env.PUBLIC) {
   var client = new cms.Client({
     store: config.store,
     accessToken: config.accessToken,
-  })
+  });
 } else {
   config = {
     host: 'localhost',
