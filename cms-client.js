@@ -4,12 +4,13 @@ var config = {};
 
 if(process.env.PUBLIC) {
   config = {
-    host: 'api-cms-1.herokuapp.com',
     store: '568e50ea2016b75641bfc3c2',
     accessToken: '568e50f22016b75641bfc3cd',
-    port: '80',
-    secure: true
   };
+  var client = new cms.Client({
+    store: config.store,
+    accessToken: config.accessToken,
+  })
 } else {
   config = {
     host: 'localhost',
@@ -18,14 +19,15 @@ if(process.env.PUBLIC) {
     port: '8080',
     secure: false
   };
+  var client = new cms.Client({
+    host: 'localhost',
+    store: config.store,
+    accessToken: config.accessToken,
+    port: '8080',
+    secure: false
+  });
 }
 
-var client = new cms.Client({
-  host: config.host,
-  store: config.store,
-  accessToken: config.accessToken,
-  port: config.port,
-  secure: config.secure
-})
+
 
 module.exports = client;
