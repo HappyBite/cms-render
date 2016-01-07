@@ -4,18 +4,18 @@ var client = require('./cms-client.js');
 var conf = require('nconf');
  
 module.exports = function(app) {
-  app.use(function(req, res, next) {   
-    var url = req.url;
-    var lastCharOnUrl = url.substring(url.length - 1, url.length); 
-    if(lastCharOnUrl !== '/') {
-      url = url + '/'
-      res.redirect(301, url);
-    } else {
-      next();
-    }
-  });
+  // app.use(function(req, res, next) {
+  //   var url = req.url;
+  //   var lastCharOnUrl = url.substring(url.length - 1, url.length); 
+  //   if(lastCharOnUrl !== '/') {
+  //     url = url + '/'
+  //     res.redirect(301, url);
+  //   } else {
+  //     next();
+  //   }
+  // });
 
-  app.use(function(req, res, next) {  
+  app.use(function(req, res, next) {   
     if (!conf.get('items')) { 
       console.log('This will only show once!');
       async.parallel({
