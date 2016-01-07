@@ -11,6 +11,7 @@ if(process.env.PUBLIC) {
   };
 } else {
   config = {
+    host: 'localhost',
     store: '568e50ea2016b75641bfc3c2',
     accessToken: '568e50f22016b75641bfc3cd',
     port: '8080',
