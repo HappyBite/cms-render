@@ -3,6 +3,7 @@ var app = express();
 var path = require('path');
 var compression = require('compression');
 var swig = require('swig');
+var dotenv = require('dotenv').load();
 var filters = require('./swig-extensions/filters.js');
 var tags = require('./swig-extensions/tags.js');
 var loadApplication = require('./load-application.js');
