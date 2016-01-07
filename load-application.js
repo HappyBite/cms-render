@@ -54,6 +54,11 @@ module.exports = function(app) {
         conf.set('items', items);
         conf.set('item_types', itemTypes);
         conf.set('meta', meta);
+        if(typeof items === 'undefined') {
+          console.log('Failed connection to the API');
+          res.send('Failed connection to the API');
+          return false;
+        }
         // get start page
         var startPage;
         for (var i = 0; i < items.length; i++) {

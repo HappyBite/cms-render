@@ -1,0 +1,16 @@
+{
+  "name": "sdk",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Gabriel Lantz <cms.io>",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^0.9.0",
+    "merge": "^1.2.0",
+    "q": "^1.2.0",
+    "superagent": "^1.2.0"
+  },
+  "devDependencies": {}
+}
