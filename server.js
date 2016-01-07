@@ -26,7 +26,7 @@ swig.setDefaults({ cache: false });
 // Don't leave both of these to false in production!
 
 app.set('port', (process.env.PORT || 5000));
-app.use('/public', express.static(__dirname + '/public'));
+app.use('/assets', express.static(__dirname + '/template/assets'));
 
 loadApplication(app);
 
@@ -36,7 +36,7 @@ if(process.env.PUBLIC) {
   // Strange flickering effect when caching files. Explore whi this is happening.
   cacheFor = 86400000; // one day
 }
-app.use(express.static( path.join( __dirname, 'public' ), { maxAge: cacheFor }));
+app.use(express.static( path.join( __dirname, 'template/assets' ), { maxAge: cacheFor }));
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
