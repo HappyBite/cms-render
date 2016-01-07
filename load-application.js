@@ -149,6 +149,7 @@ module.exports = function(app) {
     //console.log(url.substring(url.length - 1, url.length));
     //console.log(url.substring(0, url.length - 1));
     if (!~url.indexOf('.')) {
+      // I in seconds. This will be cached for 1 minute.
       res.header('Cache-Control', 'max-age=60, must-revalidate');
       return res.render('index', model);
     }
