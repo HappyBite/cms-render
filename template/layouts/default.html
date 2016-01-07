@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charSet="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="/public/favicon.ico" />
+    <title>{{page.attributes.title}}</title>
+    <link rel="stylesheet" href="/public/css/style.css" />
+    <link rel="stylesheet" href="/public/css/default.css" />
+    <link rel="stylesheet" href="/public/fonts/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/public/css/animate.css" />
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' type='text/css' />
+  </head>
+  <body>
+    <!-- header -->
+    {% include '../snippets/header.html' %}
+    <div class="wrapper">
+      <!-- Topic Header -->
+      {% include '../snippets/topic-header.html' %}
+      
+      {% if current_page.attributes.start_page !== true %}<div class="container">{% endif %}
+        <div class="row">
+          <div class="col-sm-12">
+            {% include '../routes.html' %}
+          </div>
+        </div>
+      {% if current_page.attributes.start_page != true %}</div>{% endif %}
+
+    </div>
+    <!-- Footer -->
+    {% include '../snippets/footer.html' %}
+  </body>
+  
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script src="http://simpleqode.com/preview/oneline/1.0/js/bootstrap.min.js"></script>
+  <script src="http://simpleqode.com/preview/oneline/1.0/js/scrolltopcontrol.js"></script>
+  <script src="http://simpleqode.com/preview/oneline/1.0/js/custom.js"></script>
+  <script src="http://simpleqode.com/preview/oneline/1.0/js/index.js"></script>
+</html>

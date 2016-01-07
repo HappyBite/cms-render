@@ -1,0 +1,24 @@
+{% get 'blog' '/' %}
+  {% include 'templates/blog/index.html' %}
+{% endget %}
+
+{% get 'blog' '/:id'  %}
+  {% include 'templates/blog/category.html' %}
+{% endget %}
+
+{% get 'blog' '/category' %}
+  {% include 'templates/blog/category.html' 'slug' %}
+{% endget %}
+
+{% get 'blog' '/category/:slug' %}
+  {% include 'templates/blog/category.html' %}
+{% endget %}
+
+{% get 'blog' '/archive/:y/:m/:d' %}
+  {% include 'templates/blog/category.html' %}
+{% endget %}
+
+{% get 'page' %}
+  {% set page_template_path = 'templates/pages/' + current_page.meta.page_type.data.id + '.html' %}
+  {% include page_template_path %}
+{% endget %}

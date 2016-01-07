@@ -1,10 +1,13 @@
 <ul class="nav navbar-nav navbar-right">
   {% for page in pages %}
-    {% set page_path = page.attributes.route %}
+    {% set page_path = page.attributes.path %}
     {% set page_name = page.attributes.name %}
     {% set page_type_id = page.meta.page_type.data.id %}
     {% set is_active = false %}
-    {% if page_path === relative_url %}
+    {% if page_path === url %}
+      {% set is_active = true %}
+    {% endif %}
+    {% if url === '/' and page.id === start_page.id %}
       {% set is_active = true %}
     {% endif %}
 
@@ -16,6 +19,7 @@
       {% endif %}
     </li>
   {% endfor %}
+  
   <!-- Navbar Search -->
   <li class="hidden-xs" id="navbar-search">
     <a href="#" class="show" id="open-search">
@@ -32,15 +36,3 @@
     </div>
   </li>
 </ul>
-
-{#
-{% for page in page_routes %}
-  {% set active_css_class = '' %}
-  {% if page.attributes.route === url %}
-    {% set active_css_class = 'active' %}
-  {% endif %}
-  <li role="presentation"{% if active_css_class %} class="{{active_css_class}}"{%endif%}>
-    <a href="{{page.attributes.route}}">{{page.attributes.name}}</a>
-  </li>
-{% endfor %}
-#}

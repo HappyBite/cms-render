@@ -1,10 +1,22 @@
+var swig = require('swig');
 var async = require('async');
-var client = require('./cms-client.js');
+var client = require('./cms-client.js'); 
 var conf = require('nconf');
  
 module.exports = function(app) {
-  app.use(function(req, res, next) {
-    if (!conf.get('items')) {
+  app.use(function(req, res, next) {   
+    var url = req.url;
+    var lastCharOnUrl = url.substring(url.length - 1, url.length); 
+    if(lastCharOnUrl !== '/') {
+      url = url + '/'
+      res.redirect(301, url);
+    } else {
+      next();
+    }
+  });
+
+  app.use(function(req, res, next) {  
+    if (!conf.get('items')) { 
       console.log('This will only show once!');
       async.parallel({
         item_types: function(callback) {
@@ -54,17 +66,17 @@ module.exports = function(app) {
         // set page routes
         var routes = {};
         var pageRoutes = {};
-        routes['/'] = {type: 'page', id: item.id};
+        routes['/'] = {type: 'page', id: startPage.id, path: '/'};
         pageRoutes['/'] = startPage;
         for (var i = 0; i < items.length; i++) {
           var item = items[i];
           if(item.meta.page_type) {
-            routes['/' + item.attributes.slug] = {type: 'page', id: item.id}; 
+            routes['/' + item.attributes.slug] = {type: 'page', id: item.id, path: item.attributes.route}; 
             pageRoutes['/' + item.attributes.slug] = item; 
           } 
         }
         // set list routes
-        var listRoutes = {};
+        var listRoutes = {}; 
         var metaConfig; 
         for (var i = 0; i < meta.length; i++) { 
           var item = meta[i];
@@ -75,28 +87,28 @@ module.exports = function(app) {
         }
         if (metaConfig.value.routes) {
           for (var pageRouteKey in pageRoutes) { 
-            //console.log(metaConfig.value.routes);
+            //console.log(metaConfig.value.routes); 
             var pageRoute = pageRoutes[pageRouteKey];
             if (metaConfig.value.routes[pageRoute.meta.page_type.data.id]) {
               var listRoutes = metaConfig.value.routes[pageRoute.meta.page_type.data.id];
               for (var r in listRoutes) {
                 var listRoute = listRoutes[r];
-                var listRoutePath = listRoute.path ? listRoute.path.replace(':', '') : listRoute.replace(':', '');
+                var listRoutePath = listRoute.path.replace(/:/g, '~');
+                //listRoutePath = listRoute.path;
                 if (listRoutePath === '/') {
                   listRoutePath = '';
                 }
-                if (listRoute.path) {
-                  listRoute['type'] = 'collection';
-                  listRoute['item_type'] = pageRoute.meta.page_type.data.id;
-                } else {
-                  listRoute = {
-                    type: 'collection',
-                    item_type: pageRoute.meta.page_type.data.id,
-                    path: listRoute
-                  }
-                }
-                routes[pageRouteKey + listRoutePath] = listRoute;
-                listRoutes[pageRouteKey + listRoutePath] = listRoute;
+                var addObject = {
+                  type: 'collection',
+                  item_type: pageRoute.meta.page_type.data.id,
+                  path: listRoute.path,
+                  full_path: pageRouteKey + listRoute.path,
+                  template: listRoute.template,
+                };
+                //listRoute.type = 'collection';
+                //listRoute.item_type = pageRoute.meta.page_type.data.id;
+                routes[pageRouteKey + listRoutePath] = addObject;
+                listRoutes[pageRouteKey + listRoutePath] = addObject;
               }
             }
           }
@@ -116,12 +128,22 @@ module.exports = function(app) {
     var url = req.url;
     var routes = conf.get('routes');
     var startPage = conf.get('start_page');
-    var model = {
-      relative_url: url,
-      routes: routes,
-      start_page: startPage
+    var lastCharOnUrl = url.substring(url.length - 1, url.length);
+    if(lastCharOnUrl === '/' && url !== '/') {
+      url = url.substring(0, url.length - 1)
+    }
+    var defaults = {
+      url: url,
     };
-    if (!~url.indexOf('.') && routes[url]) {
+    var model = {
+      start_page: startPage,
+    };
+    swig.setDefaults({locals: defaults});
+    //console.log(url);
+    //console.log(url.lastIndexOf(url.length - 1, url.length));
+    //console.log(url.substring(url.length - 1, url.length));
+    //console.log(url.substring(0, url.length - 1));
+    if (!~url.indexOf('.')) {
       return res.render('index', model);
     }
     next();

@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var swig = require('swig');
 var filters = require('./swig-extensions/filters.js');
+var tags = require('./swig-extensions/tags.js');
 var loadApplication = require('./load-application.js');
 
 // set config 
@@ -13,7 +14,7 @@ nconf.add('system', {type: 'file', file: 'dummy: has to be here for get set to w
 app.engine('html', swig.renderFile);
 
 app.set('view engine', 'html');
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/template');
 
 // Swig will cache templates for you, but you can disable
 // that and use Express's caching instead, if you like:

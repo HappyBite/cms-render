@@ -1,0 +1,21 @@
+{% set categories = 'items' | resource('type=blog-post-category') %}
+{% set config = 'meta_item' | resource('config') %}
+
+{{slug}}
+
+{% if slug %}
+<h1 class="title-lg"><span>Blog - Category</span></h1>
+  en kategori
+{% else %}
+<h1 class="title-lg"><span>Blog - Categories</span></h1>
+  <h2>
+    <a href="{{url}}">Categories</a>
+  </h2>
+  <ul class="nav">
+    {% for category in categories %}
+      <li>
+        <a href="{{category.attributes.slug}}">{{category.attributes.title}}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
