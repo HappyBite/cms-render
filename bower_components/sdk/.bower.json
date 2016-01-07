@@ -1,10 +1,10 @@
 {
   "name": "sdk",
-  "_release": "5157121d4f",
+  "_release": "6df51e43db",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "5157121d4f911f55def89edadb1494af89706d7e"
+    "commit": "6df51e43db60e937bec72ed4cf0e932b8b9f5967"
   },
   "_source": "https://glantz@bitbucket.org/glantz/sdk.git",
   "_target": "*",

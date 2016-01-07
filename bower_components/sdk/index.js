@@ -14,7 +14,7 @@ var Client = function(options) {
     version: 'v1',
     store: null,
     secure : true,
-    host : 'localhost',
+    host : 'api-cms-1.herokuapp.com',
     port : null,
     username : 'gabriel',
     password : 'rellim77',
