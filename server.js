@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var path = require('path');
+var compression = require('compression');
 var swig = require('swig');
 var filters = require('./swig-extensions/filters.js');
 var tags = require('./swig-extensions/tags.js');
@@ -26,17 +27,20 @@ swig.setDefaults({ cache: false });
 // Don't leave both of these to false in production!
 
 app.set('port', (process.env.PORT || 5000));
-app.use('/assets', express.static(__dirname + '/template/assets'));
 
-loadApplication(app);
+// compress responses
+app.use(compression());
 
 // the static middleware must come after the sass middleware
 var cacheFor = -1;
 if(process.env.PUBLIC) {
-  // Strange flickering effect when caching files. Explore whi this is happening.
+  // Strange flickering effect when caching files. Explore why this is happening.
   cacheFor = 86400000; // one day
 }
-app.use(express.static( path.join( __dirname, 'template/assets' ), { maxAge: cacheFor }));
+//app.use(express.static( path.join( __dirname, '/template/assets' ), { maxAge: cacheFor }));
+app.use('/assets', express.static( path.join( __dirname, 'template/assets' ), { maxAge: cacheFor }));
+
+loadApplication(app);
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
