@@ -26,7 +26,7 @@ module.exports = function(app) {
       res.removeHeader('Content-Length');
       res.removeHeader('Cache-Control');
       res.setHeader('X-Hijacked', 'yes!');
-      res.send(200, 'Git hook executed!!!');
+      //res.send('Git hook executed!!!');
       return false;
     }
     if (!conf.get('items')) { 
