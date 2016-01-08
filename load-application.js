@@ -19,12 +19,15 @@ module.exports = function(app) {
     if (req.query.git_hook === 'true') {
       //app.cache = {};
       //process.exit(1);
+      res.header('Cache-Control', 'max-age=0, must-revalidate');
       res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
       res.header('Expires', '-1');
       res.header('Pragma', 'no-cache');
       res.send('Git hook executed!!!');
+      app.disable('etag');
       return false;
     }
+    app.enable('etag');
     if (!conf.get('items')) { 
       console.log('This will only show once!');
       async.parallel({
