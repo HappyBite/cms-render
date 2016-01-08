@@ -24,10 +24,8 @@ module.exports = function(app) {
       res.header('Expires', '-1');
       res.header('Pragma', 'no-cache');
       res.send('Git hook executed!!!');
-      app.disable('etag');
       return false;
     }
-    app.enable('etag');
     if (!conf.get('items')) { 
       console.log('This will only show once!');
       async.parallel({
