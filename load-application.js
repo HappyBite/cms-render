@@ -16,19 +16,19 @@ module.exports = function(app) {
   // });
 
   app.use(function(req, res, next) {   
-    if (req.headers['git_hook'] || (req.body && req.body.git_hook) || req.query.git_hook) {
-      //app.cache = {};
-      //process.exit(1);
-      res.header('Cache-Control', 'max-age=0, must-revalidate');
-      res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-      res.header('Expires', '-1');
-      res.header('Pragma', 'no-cache');
-      res.removeHeader('Content-Length');
-      res.removeHeader('Cache-Control');
-      res.setHeader('X-Hijacked', 'yes!');
-      res.status('304').send('Git hook executed!!!');
-      return false;
-    }
+    // if (req.headers['git_hook'] || (req.body && req.body.git_hook) || req.query.git_hook) {
+    //   //app.cache = {};
+    //   //process.exit(1);
+    //   res.header('Cache-Control', 'max-age=0, must-revalidate');
+    //   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    //   res.header('Expires', '-1');
+    //   res.header('Pragma', 'no-cache');
+    //   res.removeHeader('Content-Length');
+    //   res.removeHeader('Cache-Control');
+    //   res.setHeader('X-Hijacked', 'yes!');
+    //   res.status('304').send('Git hook executed!!!');
+    //   return false;
+    // }
     if (!conf.get('items')) { 
       console.log('This will only show once!');
       async.parallel({
@@ -164,7 +164,7 @@ module.exports = function(app) {
     //console.log(url.substring(0, url.length - 1));
     if (!~url.indexOf('.')) {
       // It's in seconds. This will be cached for 1 minute.
-      res.header('Cache-Control', 'max-age=60, must-revalidate');
+      //res.header('Cache-Control', 'max-age=60, must-revalidate');
       return res.render('index', model);
     }
     next();
