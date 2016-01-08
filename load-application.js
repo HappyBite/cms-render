@@ -19,10 +19,10 @@ module.exports = function(app) {
     if (req.query.git_hook === 'true') {
       //app.cache = {};
       //process.exit(1);
-      res.send('Git hook executed!!!');
       res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
       res.header('Expires', '-1');
       res.header('Pragma', 'no-cache');
+      res.send('Git hook executed!!!');
       return false;
     }
     if (!conf.get('items')) { 
