@@ -16,14 +16,17 @@ module.exports = function(app) {
   // });
 
   app.use(function(req, res, next) {   
-    if (req.query.git_hook === 'true') {
+    if (req.body && req.body.git_hook === 'true') {
       //app.cache = {};
       //process.exit(1);
       res.header('Cache-Control', 'max-age=0, must-revalidate');
       res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
       res.header('Expires', '-1');
       res.header('Pragma', 'no-cache');
-      res.send('Git hook executed!!!');
+      res.removeHeader('Content-Length');
+      res.removeHeader('Cache-Control');
+      res.setHeader('X-Hijacked', 'yes!');
+      res.send(200, 'Git hook executed!!!');
       return false;
     }
     if (!conf.get('items')) { 
@@ -160,7 +163,7 @@ module.exports = function(app) {
     //console.log(url.substring(0, url.length - 1));
     if (!~url.indexOf('.')) {
       // It's in seconds. This will be cached for 1 minute.
-      //res.header('Cache-Control', 'max-age=60, must-revalidate');
+      res.header('Cache-Control', 'max-age=60, must-revalidate');
       return res.render('index', model);
     }
     next();
