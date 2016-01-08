@@ -16,7 +16,7 @@ module.exports = function(app) {
   // });
 
   app.use(function(req, res, next) {   
-    if (req.body && req.body.git_hook === 'true') {
+    if (req.headers['git_hook'] || (req.body && req.body.git_hook) || req.query.git_hook) {
       //app.cache = {};
       //process.exit(1);
       res.header('Cache-Control', 'max-age=0, must-revalidate');
@@ -144,6 +144,7 @@ module.exports = function(app) {
   // Middleware
   app.use(function(req, res, next) {
     var url = req.url;
+    console.log(url);
     var routes = conf.get('routes');
     var startPage = conf.get('start_page');
     var lastCharOnUrl = url.substring(url.length - 1, url.length);
