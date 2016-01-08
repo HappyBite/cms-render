@@ -16,6 +16,15 @@ module.exports = function(app) {
   // });
 
   app.use(function(req, res, next) {   
+    if (req.query.git_hook === 'true') {
+      //app.cache = {};
+      //process.exit(1);
+      res.send('Git hook executed!!!');
+      res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.header('Expires', '-1');
+      res.header('Pragma', 'no-cache');
+      return false;
+    }
     if (!conf.get('items')) { 
       console.log('This will only show once!');
       async.parallel({
