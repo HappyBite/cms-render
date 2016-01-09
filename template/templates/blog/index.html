@@ -1,25 +1,29 @@
+{% set posts = 'items' | resource('type=blog-post') %}
 {% set categories = 'items' | resource('type=blog-post-category') %}
 {% set config = 'meta_item' | resource('config') %}
 
 <div class="row">
   <div class="col-sm-9">
-    <!-- Blog Post #1 -->
+    {% for post in posts %}
+    {% set post  = post.attributes %}
+    {% set image = post.relationships.image | include %}
+    <!-- Blog Post #{{loop.index}} -->
     <div class="blog">
       <img src="/assets/img/photo-1.jpg" alt="...">
       <div class="blog-desc">
         <h3 class="blog-title">
-          <a href="blog-post.html">Sed lacinia suscipit lacus non sodales. Pellentesque lacinia ornare justo eu tincidunt.</a>
+          <a href="blog-post.html">{{post.title}}</a>
         </h3>
         <hr>
         <p class="text-muted">by <a href="#" class="author-preview" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Pellentesque nulla leo, laoreet sed luctus eu, dapibus id lorem. Pellentesque eu tincidunt odio." data-original-title="John Doe">John Doe</a> on March 25, 2014</p>
         <p>
-          Nam ultrices, orci sit amet dignissim dignissim, tellus elit consequat dui, eu venenatis urna nisi non est. Aliquam egestas pulvinar ornare. Aenean et vulputate lacus. Ut eget purus ut ante imperdiet feugiat quis vel elit. Donec imperdiet enim quis risus porttitor congue. Vestibulum vel tristique urna. Pellentesque nulla leo, laoreet sed luctus eu, dapibus id lorem. Pellentesque eu tincidunt odio. Proin imperdiet bibendum mauris, ut bibendum odio mollis id.
+          {{post.summary}}
         </p>
         <a class="btn btn-lg btn-red" href="blog-post.html">Read More...</a>
         <a href="blog-post.html"><img class="img-responsive blog-img" src="/assets/img/general-3.jpg" alt="..."></a>
       </div>
     </div>
-    
+    {% endfor %}
     <!-- Pagination -->
     <ul class="pagination pull-right">
       <li class="disabled"><a href="#">«</a></li>

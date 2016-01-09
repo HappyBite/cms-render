@@ -10,16 +10,16 @@
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
       <!-- Slide #1 -->
-      {% for slide in current_page.relationships.slider.data %}
+      {% for slide in current_page.relationships.slider | include %}
         <div class="item{%if loop.index0 === 0%} active{%endif%}" id="item-{{loop.index}}">
           <div class="container">
             <div class="row">
               <div class="col-sm-6">
                 <img class="img-responsive logo-img animated fadeInDownBig g-delay_1" src="/assets/img/logo-lg.png" alt="...">
                 <div class="text-center">
-                  <span class="slogan animated fadeInDownBig g-delay_2">{{items_lookup[current_page.relationships.slider.data[0].id].attributes.heading}}</span>
+                  <span class="slogan animated fadeInDownBig g-delay_2">{{slide.attributes.heading}}</span>
                   <p class="text-center animated fadeInUpBig g-delay_3">
-                    {{items_lookup[current_page.relationships.slider.data[0].id].attributes.text}}
+                    {{slide.attributes.text}}
                   </p>
                 </div>
               </div>

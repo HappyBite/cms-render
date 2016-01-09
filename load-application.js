@@ -73,16 +73,16 @@ module.exports = function(app) {
           return false;
         }
         // Items dictionary
-        var items_lookup = {};
+        var item_dictionary = {};
         var startPage;
         for (var i = 0; i < items.length; i++) {
           var item = items[i];
-          items_lookup[item.id] = item;
+          item_dictionary[item.id] = item;
           if(item.attributes.start_page) {
             startPage = item;
           } 
         }
-        conf.set('items_lookup', items_lookup);
+        conf.set('item_dictionary', item_dictionary);
         // set page routes
         var routes = {};
         var pageRoutes = {};
@@ -148,7 +148,7 @@ module.exports = function(app) {
     var url = req.url;
     console.log(url);
     var routes = conf.get('routes');
-    var items_lookup = conf.get('items_lookup');
+    var item_dictionary = conf.get('item_dictionary');
     var startPage = conf.get('start_page');
     var lastCharOnUrl = url.substring(url.length - 1, url.length);
     if(lastCharOnUrl === '/' && url !== '/') {
@@ -158,8 +158,7 @@ module.exports = function(app) {
       url: url,
     };
     var model = {
-      start_page: startPage,
-      items_lookup: conf.get('items_lookup')
+      start_page: startPage
     };
     swig.setDefaults({locals: defaults});
     //console.log(url);

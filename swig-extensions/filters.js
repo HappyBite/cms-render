@@ -6,12 +6,7 @@ var cache = require('nconf');
 var querystring = require('querystring');  
 var utils = require('./utils');  
 
-// Get correct route
-swig.setFilter('route', function (url) {
-  return utils.getCurrentRoute(url);
-});
-
-// This filter will return an API resource
+// Returns an API resource
 swig.setFilter('resource', function (resource, query) {
   var res;
   if (resource === 'items') { 
@@ -39,4 +34,34 @@ swig.setFilter('resource', function (resource, query) {
 swig.setFilter('current_page', function (url) {
   var routes = cache.get('page_routes');
   return routes[url];
+});
+
+// Get current route
+swig.setFilter('route', function (url) {
+  return utils.getCurrentRoute(url);
+});
+
+// Get relationships for a property
+swig.setFilter('include', function (property) {
+  var relations;
+  var item;
+  var itemDictionary = cache.get('item_dictionary');
+  if (property.data instanceof Array) {
+    relations = [];
+    if (property.data.length) {
+      for (var i = 0; i < property.data.length; i++) {
+        item = itemDictionary[property.data[i].id];
+        if(item) {
+          relations.push(item);  
+        }
+      }
+    }
+  } else if (typeof property.data === 'object') {
+    relations = {};  
+    if (Object.keys(property.data).length) {
+      item = itemDictionary[property.data.id];
+      relations = item;  
+    }
+  }
+  return relations;
 });
