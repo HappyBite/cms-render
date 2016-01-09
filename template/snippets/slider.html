@@ -16,9 +16,9 @@
             <div class="col-sm-6">
               <img class="img-responsive logo-img animated fadeInDownBig g-delay_1" src="/assets/img/logo-lg.png" alt="...">
               <div class="text-center">
-                <span class="slogan animated fadeInDownBig g-delay_2">Premium Bootstrap template</span>
+                <span class="slogan animated fadeInDownBig g-delay_2">{{items_lookup[current_page.relationships.slider.data[0].id].attributes.heading}}</span>
                 <p class="text-center animated fadeInUpBig g-delay_3">
-                  Powerful responsive theme great for corporate websites, web & mobile apps. Built with Bootstrap 3, it combines all of its great features with our clean user-friendly layout.
+                  {{items_lookup[current_page.relationships.slider.data[0].id].attributes.text}}
                 </p>
               </div>
             </div>

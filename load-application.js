@@ -72,15 +72,17 @@ module.exports = function(app) {
           res.send('Failed connection to the API');
           return false;
         }
-        // get start page
+        // Items dictionary
+        var items_lookup = {};
         var startPage;
         for (var i = 0; i < items.length; i++) {
           var item = items[i];
+          items_lookup[item.id] = item;
           if(item.attributes.start_page) {
             startPage = item;
-            break;
           } 
         }
+        conf.set('items_lookup', items_lookup);
         // set page routes
         var routes = {};
         var pageRoutes = {};
@@ -146,6 +148,7 @@ module.exports = function(app) {
     var url = req.url;
     console.log(url);
     var routes = conf.get('routes');
+    var items_lookup = conf.get('items_lookup');
     var startPage = conf.get('start_page');
     var lastCharOnUrl = url.substring(url.length - 1, url.length);
     if(lastCharOnUrl === '/' && url !== '/') {
@@ -156,6 +159,7 @@ module.exports = function(app) {
     };
     var model = {
       start_page: startPage,
+      items_lookup: conf.get('items_lookup')
     };
     swig.setDefaults({locals: defaults});
     //console.log(url);
