@@ -9,6 +9,9 @@ var utils = require('./utils');
 // Returns an API resource
 swig.setFilter('asset_url', function (id, query) {
   var assetDictionary = cache.get('asset_dictionary');
+  if(typeof assetDictionary[id] === 'undefined') {
+    return;
+  }
   return assetDictionary[id].attributes.file.url;
 });
 
@@ -52,6 +55,9 @@ swig.setFilter('include', function (property) {
   var relations;
   var item;
   var itemDictionary;
+  if(typeof property.data === 'undefined') {
+    return;
+  }
   if(property.data.type === 'assets') {
     itemDictionary = cache.get('asset_dictionary');
   } else {
