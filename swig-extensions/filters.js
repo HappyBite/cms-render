@@ -10,7 +10,7 @@ var utils = require('./utils');
 swig.setFilter('asset_url', function (fileName, query) {
   var assetDictionary = cache.get('asset_dictionary');
   console.log(assetDictionary);
-  return assetDictionary[fileName];
+  return assetDictionary[fileName].attributes.file.url;
 });
 
 // Returns an API resource

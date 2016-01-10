@@ -93,13 +93,14 @@ module.exports = function(app) {
             startPage = item;
           } 
         }
+        conf.set('item_dictionary', item_dictionary);
         // Asset dictionary
         var asset_dictionary = {};
         for (var i = 0; i < assets.length; i++) {
           var asset = assets[i];
           asset_dictionary[asset.attributes.file.name] = asset;
         }
-        conf.set('asset_dictionary', item_dictionary);
+        conf.set('asset_dictionary', asset_dictionary);
         // set page routes
         var routes = {};
         var pageRoutes = {};
