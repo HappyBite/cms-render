@@ -7,6 +7,11 @@ var querystring = require('querystring');
 var utils = require('./utils');  
 
 // Returns an API resource
+swig.setFilter('asset_url', function (url, query) {
+  return url;
+});
+
+// Returns an API resource
 swig.setFilter('resource', function (resource, query) {
   var res;
   if (resource === 'items') { 
