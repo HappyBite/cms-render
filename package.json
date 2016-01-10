@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "node server",
-    "start-dev": "grunt"
+    "start-dev": "grunt",
+    "build": "babel babel-test/scripts/ --watch --out-file babel-test/lib/bundle.js"
   },
   "author": "Gabriel Lantz <cms.io>",
   "license": "MIT",
@@ -23,6 +24,7 @@
     "dotenv": "^1.2.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.4.0",
     "grunt-concurrent": "^1.0.0",
     "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-watch": "^0.6.1",
