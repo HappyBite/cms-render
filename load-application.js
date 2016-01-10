@@ -58,21 +58,32 @@ module.exports = function(app) {
               callback(null, items);
             }
           });
+        },
+        assets: function(callback) {
+          client.assets({}, function(err, items) {
+            if (err) {
+              callback(err);
+            } else {
+              callback(null, items);
+            }
+          });
         }
       },
       function(err, results) {
         var items = results.items;
         var itemTypes = results.item_types;
         var meta = results.meta;
+        var assets = results.assets;
         conf.set('items', items);
         conf.set('item_types', itemTypes);
         conf.set('meta', meta);
+        conf.set('assets', assets);
         if(typeof items === 'undefined') {
           console.log('Failed connection to the API');
           res.send('Failed connection to the API');
           return false;
         }
-        // Items dictionary
+        // Item dictionary
         var item_dictionary = {};
         var startPage;
         for (var i = 0; i < items.length; i++) {
@@ -82,7 +93,13 @@ module.exports = function(app) {
             startPage = item;
           } 
         }
-        conf.set('item_dictionary', item_dictionary);
+        // Asset dictionary
+        var asset_dictionary = {};
+        for (var i = 0; i < assets.length; i++) {
+          var asset = assets[i];
+          asset_dictionary[asset.attributes.file.name] = asset;
+        }
+        conf.set('asset_dictionary', item_dictionary);
         // set page routes
         var routes = {};
         var pageRoutes = {};
@@ -147,8 +164,6 @@ module.exports = function(app) {
   app.use(function(req, res, next) {
     var url = req.url;
     console.log(url);
-    var routes = conf.get('routes');
-    var item_dictionary = conf.get('item_dictionary');
     var startPage = conf.get('start_page');
     var lastCharOnUrl = url.substring(url.length - 1, url.length);
     if(lastCharOnUrl === '/' && url !== '/') {

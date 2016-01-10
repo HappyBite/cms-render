@@ -7,8 +7,10 @@ var querystring = require('querystring');
 var utils = require('./utils');  
 
 // Returns an API resource
-swig.setFilter('asset_url', function (url, query) {
-  return url;
+swig.setFilter('asset_url', function (fileName, query) {
+  var assetDictionary = cache.get('asset_dictionary');
+  console.log(assetDictionary);
+  return assetDictionary[fileName];
 });
 
 // Returns an API resource

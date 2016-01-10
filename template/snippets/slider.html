@@ -1,6 +1,6 @@
 <div class="home-slider">
   <!-- Carousel -->
-  <div id="home-slider" class="carousel lide" data-ride="arousel">
+  <div id="home-slider" class="carousel slide" data-ride="carousel">
     <!-- Indicators -->
     <ol class="carousel-indicators">
       {% for slide in current_page.relationships.slider.data %}
@@ -15,18 +15,30 @@
           <div class="container">
             <div class="row">
               <div class="col-sm-6">
-                <img class="img-responsive logo-img nimated adeInDownBig g-delay_1" src="/assets/img/logo-lg.png" alt="...">
-                <div class="text-center">
-                  <span class="slogan animated adeInDownBig g-delay_2">{{slide.attributes.heading}}</span>
-                  <p class="text-center animated adeInUpBig g-delay_3">
+                <div class="fully-responsive">
+                  <h3 class="fully-responsive__title animated slideInDown g-delay_1">Fully responsive design</h3>
+                  <div class="fully-responsive__text animated slideInDown g-delay_2">
+                    Looks great on all major browsers, tablets and phones
+                  </div>
+                  <p class="animated fadeInUp g-delay_5">
+                    Easily and efficiently scales your websites and applications with a single code base, from phones to tablets to desktops with CSS media queries.
+                  </p>
+                  <div class="fully-responsive__btns">
+                    <a class="btn btn-lg btn-red fully-responsive-btns__btn animated fadeInUpBig g-delay_5">Purchase</a> <a class="btn btn-lg btn-default fully-responsive-btns__btn animated fadeInUpBig g-delay_5">Read more</a>
+                  </div>
+                </div>
+                
+                <!--<div class="text-center">
+                  <span class="slogan animated fadeInDownBig g-delay_2">{{slide.attributes.heading}}</span>
+                  <p class="text-center animated fadeInUpBig g-delay_3">
                     {{slide.attributes.text}}
                   </p>
-                </div>
+                </div>-->
               </div>
             </div> <!-- / .row -->
           </div> <!-- / .container -->
           <div class="bg-img hidden-xs">
-            <img src="/assets/img/item-1.png" alt="...">
+            <img src="{{ 'white_1.jpg' | asset_url }}" alt="">
           </div>
         </div> <!-- / .item -->
       {% endfor %}

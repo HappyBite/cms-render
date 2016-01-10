@@ -83,6 +83,16 @@ Client.prototype.meta = function(query, callback) {
 };
 
 /**
+ * Get assets
+ * @param  {object}   query    
+ * @param  {Function} callback 
+ * @return {object}         
+ */
+Client.prototype.assets = function(query, callback) {
+  this.request('/assets/', query, callback);
+};
+
+/**
  * Get item types
  * @param  {object}   query    
  * @param  {Function} callback 
