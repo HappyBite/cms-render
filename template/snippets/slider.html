@@ -11,34 +11,29 @@
     <div class="carousel-inner">
       <!-- Slide #1 -->
       {% for slide in current_page.relationships.slider | include %}
+        {% set image = slide.relationships.image | include %}
         <div class="item{%if loop.index0 === 0%} active{%endif%}" id="item-{{loop.index}}">
           <div class="container">
             <div class="row">
-              <div class="col-sm-6">
+              <div class="col-sm-6"> 
                 <div class="fully-responsive">
-                  <h3 class="fully-responsive__title animated slideInDown g-delay_1">Fully responsive design</h3>
-                  <div class="fully-responsive__text animated slideInDown g-delay_2">
-                    Looks great on all major browsers, tablets and phones
-                  </div>
+                  <h3 class="fully-responsive__title animated slideInDown g-delay_1">{{slide.attributes.heading}}</h3>
+                  <!--<div class="fully-responsive__text animated slideInDown g-delay_2">
+                    Ingress
+                  </div>-->
                   <p class="animated fadeInUp g-delay_5">
-                    Easily and efficiently scales your websites and applications with a single code base, from phones to tablets to desktops with CSS media queries.
-                  </p>
-                  <div class="fully-responsive__btns">
-                    <a class="btn btn-lg btn-red fully-responsive-btns__btn animated fadeInUpBig g-delay_5">Purchase</a> <a class="btn btn-lg btn-default fully-responsive-btns__btn animated fadeInUpBig g-delay_5">Read more</a>
-                  </div>
-                </div>
-                
-                <!--<div class="text-center">
-                  <span class="slogan animated fadeInDownBig g-delay_2">{{slide.attributes.heading}}</span>
-                  <p class="text-center animated fadeInUpBig g-delay_3">
                     {{slide.attributes.text}}
                   </p>
-                </div>-->
+                  <div class="fully-responsive__btns">
+                    <a class="btn btn-lg btn-red fully-responsive-btns__btn animated fadeInUpBig g-delay_5">Read more</a>
+                    <!--<a class="btn btn-lg btn-default fully-responsive-btns__btn animated fadeInUpBig g-delay_5">Read more</a>-->
+                  </div>
+                </div>
               </div>
             </div> <!-- / .row -->
           </div> <!-- / .container -->
           <div class="bg-img hidden-xs">
-            <img src="{{ 'white_1.jpg' | asset_url }}" alt="">
+            <img src="{{ image.id | asset_url }}" alt="">
           </div>
         </div> <!-- / .item -->
       {% endfor %}

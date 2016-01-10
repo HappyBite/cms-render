@@ -7,10 +7,9 @@ var querystring = require('querystring');
 var utils = require('./utils');  
 
 // Returns an API resource
-swig.setFilter('asset_url', function (fileName, query) {
+swig.setFilter('asset_url', function (id, query) {
   var assetDictionary = cache.get('asset_dictionary');
-  console.log(assetDictionary);
-  return assetDictionary[fileName].attributes.file.url;
+  return assetDictionary[id].attributes.file.url;
 });
 
 // Returns an API resource
@@ -52,7 +51,12 @@ swig.setFilter('route', function (url) {
 swig.setFilter('include', function (property) {
   var relations;
   var item;
-  var itemDictionary = cache.get('item_dictionary');
+  var itemDictionary;
+  if(property.data.type === 'assets') {
+    itemDictionary = cache.get('asset_dictionary');
+  } else {
+    itemDictionary = cache.get('item_dictionary');  
+  }
   if (property.data instanceof Array) {
     relations = [];
     if (property.data.length) {

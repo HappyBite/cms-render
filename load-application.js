@@ -98,7 +98,7 @@ module.exports = function(app) {
         var asset_dictionary = {};
         for (var i = 0; i < assets.length; i++) {
           var asset = assets[i];
-          asset_dictionary[asset.attributes.file.name] = asset;
+          asset_dictionary[asset.id] = asset;
         }
         conf.set('asset_dictionary', asset_dictionary);
         // set page routes
@@ -164,7 +164,6 @@ module.exports = function(app) {
   // Middleware
   app.use(function(req, res, next) {
     var url = req.url;
-    console.log(url);
     var startPage = conf.get('start_page');
     var lastCharOnUrl = url.substring(url.length - 1, url.length);
     if(lastCharOnUrl === '/' && url !== '/') {
@@ -182,6 +181,7 @@ module.exports = function(app) {
     //console.log(url.substring(url.length - 1, url.length));
     //console.log(url.substring(0, url.length - 1));
     if (!~url.indexOf('.')) {
+      //console.log(url);
       // It's in seconds. This will be cached for 1 minute.
       //res.header('Cache-Control', 'max-age=60, must-revalidate');
       return res.render('index', model);
