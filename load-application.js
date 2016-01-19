@@ -123,12 +123,12 @@ module.exports = function(app) {
             break; 
           }
         }
-        if (metaConfig.value.routes) {
+        if (metaConfig.attributes.value.routes) {
           for (var pageRouteKey in pageRoutes) { 
             //console.log(metaConfig.value.routes); 
             var pageRoute = pageRoutes[pageRouteKey];
-            if (metaConfig.value.routes[pageRoute.meta.page_type.data.id]) {
-              var listRoutes = metaConfig.value.routes[pageRoute.meta.page_type.data.id];
+            if (metaConfig.attributes.value.routes[pageRoute.meta.page_type.data.id]) {
+              var listRoutes = metaConfig.attributes.value.routes[pageRoute.meta.page_type.data.id];
               for (var r in listRoutes) {
                 var listRoute = listRoutes[r];
                 var listRoutePath = listRoute.path.replace(/:/g, '~');

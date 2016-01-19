@@ -3,14 +3,15 @@
   <div id="home-slider" class="carousel slide" data-ride="carousel">
     <!-- Indicators -->
     <ol class="carousel-indicators">
-      {% for slide in current_page.relationships.slider.data %}
+      {% for slide in current_page.attributes.slider %}
       <li data-target="#home-slider" data-slide-to="{{loop.index0}}"{%if loop.index0 === 0%} class="active"{%endif%}></li>
       {% endfor %}
     </ol>
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
       <!-- Slide #1 -->
-      {% for slide in current_page.relationships.slider | include %}
+      {% set slides = current_page.relationships.slider | include %}
+      {% for slide in slides %}
         {% set image = slide.relationships.image | include %}
         <div class="item{%if loop.index0 === 0%} active{%endif%}" id="item-{{loop.index}}">
           <div class="container">
@@ -22,19 +23,21 @@
                     Ingress
                   </div>-->
                   <p class="animated fadeInUp g-delay_5">
-                    {{slide.attributes.text}}
+                    {{slide.text}}
                   </p>
                   <div class="fully-responsive__btns">
-                    <a class="btn btn-lg btn-red fully-responsive-btns__btn animated fadeInUpBig g-delay_5">Read more</a>
+                    <a class="btn btn-lg btn-red fully-responsive-btns__btn animated fadeInUpBig g-delay_5">{{slide.attributes.link_text}}</a>
                     <!--<a class="btn btn-lg btn-default fully-responsive-btns__btn animated fadeInUpBig g-delay_5">Read more</a>-->
                   </div>
                 </div>
               </div>
             </div> <!-- / .row -->
           </div> <!-- / .container -->
+          {% if image %}
           <div class="bg-img hidden-xs">
             <img src="{{ image.id | asset_url }}" alt="">
           </div>
+          {% endif %}
         </div> <!-- / .item -->
       {% endfor %}
       {#

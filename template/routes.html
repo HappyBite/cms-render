@@ -19,6 +19,6 @@
 {% endget %}
 
 {% get 'page' %}
-  {% set page_template_path = 'templates/' + current_page.meta.page_type.data.id + '.html' %}
+  {% set page_template_path = 'templates/pages/' + current_page.meta.page_type.data.id + '.html' %}
   {% include page_template_path %}
 {% endget %}
