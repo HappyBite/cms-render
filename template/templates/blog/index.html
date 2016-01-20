@@ -1,6 +1,5 @@
-{% set posts = 'items' | resource('type=blog-post') %}
+{% set posts =      'items' | resource('type=blog-post') %}
 {% set categories = 'items' | resource('type=blog-post-category') %}
-{% set config = 'meta_item' | resource('config') %}
 
 <div class="row">
   <div class="col-sm-9">
@@ -49,7 +48,7 @@
       <li><a href="#">Management</a></li>
       <li><a href="#">Security</a></li>
       {% for category in categories %}
-      <li><a href="category/{{category.attributes.slug}}">{{category.attributes.title}}</a></li>
+      <li><a href="/blogg/category/{{category.attributes.slug}}">{{category.attributes.title}}</a></li>
       {% endfor %}
     </ul>
     {% endif %}

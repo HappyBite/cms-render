@@ -1,7 +1,7 @@
 var async = require('async');
 var sync = require('sync');
 var client = require('../cms-client.js'); 
-var cache = require('nconf'); 
+var cache = require('nconf');
 var querystring = require('querystring'); 
 
 module.exports = {
@@ -107,7 +107,7 @@ module.exports = {
           if(res === url) {
             // console.log('Test: ' + routeMatcher.test(url));
             // console.log('Found match: ' + res);
-            // console.log(route.full_path);
+            console.log(route.full_path);
             var routePathSplit = route.full_path.split('/:');
             for (var i = 0; i < matcher.length; i++) {
               if (i > 0) {

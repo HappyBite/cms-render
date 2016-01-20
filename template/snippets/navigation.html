@@ -1,8 +1,8 @@
 <ul class="nav navbar-nav navbar-right">
   {% for page in pages %}
     {% set page_path = page.attributes.path %}
-    {% set page_name = page.attributes.name %}
-    {% set page_type_id = page.meta.page_type.data.id %}
+    {% set page_name = page.attributes.display_name %}
+    {% set page_type_id = page.meta.item_type.data.id %}
     {% set is_active = false %}
     {% if page_path === url %}
       {% set is_active = true %}

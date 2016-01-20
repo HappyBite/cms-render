@@ -45,6 +45,11 @@ swig.setFilter('current_page', function (url) {
   return routes[url];
 });
 
+// Gets all pages
+swig.setFilter('pages', function (url) {
+  return cache.get('pages');
+});
+
 // Get current route
 swig.setFilter('route', function (url) {
   return utils.getCurrentRoute(url);

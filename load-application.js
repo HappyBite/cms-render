@@ -3,7 +3,7 @@ var async = require('async');
 var client = require('./cms-client.js'); 
 var conf = require('nconf');
 
-module.exports = function(app) {
+module.exports = function(app) { 
   // app.use(function(req, res, next) {
   //   var url = req.url;
   //   var lastCharOnUrl = url.substring(url.length - 1, url.length); 
@@ -68,7 +68,7 @@ module.exports = function(app) {
             }
           });
         }
-      },
+      }, 
       function(err, results) {
         var items = results.items;
         var itemTypes = results.item_types;
@@ -78,7 +78,7 @@ module.exports = function(app) {
         conf.set('item_types', itemTypes);
         conf.set('meta', meta);
         conf.set('assets', assets);
-        if(typeof items === 'undefined') {
+        if(typeof items === 'undefined') { 
           console.log('Failed connection to the API');
           res.send('Failed connection to the API');
           return false;
@@ -86,31 +86,43 @@ module.exports = function(app) {
         // Item dictionary
         var item_dictionary = {};
         var startPage;
+        var startPageId;
         for (var i = 0; i < items.length; i++) {
           var item = items[i];
           item_dictionary[item.id] = item;
           if(item.attributes.start_page) {
-            startPage = item;
+            startPageId = item.relationships.page.data.id;
           } 
-        }
+        } 
+        startPage = item_dictionary[startPageId];
         conf.set('item_dictionary', item_dictionary);
+        
         // Asset dictionary
         var asset_dictionary = {};
         for (var i = 0; i < assets.length; i++) {
           var asset = assets[i];
-          asset_dictionary[asset.id] = asset;
+          asset_dictionary[asset.id] = asset; 
         }
         conf.set('asset_dictionary', asset_dictionary);
+         
         // set page routes
         var routes = {};
         var pageRoutes = {};
+        var pages = [];
         routes['/'] = {type: 'page', id: startPage.id, path: '/'};
-        pageRoutes['/'] = startPage;
+        pageRoutes['/'] = startPage; 
         for (var i = 0; i < items.length; i++) {
           var item = items[i];
-          if(item.meta.page_type) {
-            routes['/' + item.attributes.slug] = {type: 'page', id: item.id, path: item.attributes.route}; 
-            pageRoutes['/' + item.attributes.slug] = item; 
+          if(item.meta.item_type.data.id === 'nav-menu-item') {
+            var page = item_dictionary[item.relationships.page.data.id];
+            page.attributes.slug = item.attributes.slug;
+            page.attributes.path = item.attributes.path;
+            page.attributes.display_name = item.attributes.display_name;
+            page.attributes.start_page = item.attributes.start_page;
+            page.meta.position = item.meta.position;
+            routes['/' + page.attributes.slug] = {type: 'page', id: page.id, path: page.attributes.path}; 
+            pageRoutes['/' + page.attributes.slug] = page;
+            pages.push(page);
           } 
         }
         // set list routes
@@ -126,9 +138,9 @@ module.exports = function(app) {
         if (metaConfig.attributes.value.routes) {
           for (var pageRouteKey in pageRoutes) { 
             //console.log(metaConfig.value.routes); 
-            var pageRoute = pageRoutes[pageRouteKey];
-            if (metaConfig.attributes.value.routes[pageRoute.meta.page_type.data.id]) {
-              var listRoutes = metaConfig.attributes.value.routes[pageRoute.meta.page_type.data.id];
+            var pageRoute = pageRoutes[pageRouteKey]; 
+            if (metaConfig.attributes.value.routes[pageRoute.meta.item_type.data.id]) {
+              var listRoutes = metaConfig.attributes.value.routes[pageRoute.meta.item_type.data.id];
               for (var r in listRoutes) {
                 var listRoute = listRoutes[r];
                 var listRoutePath = listRoute.path.replace(/:/g, '~');
@@ -137,12 +149,13 @@ module.exports = function(app) {
                   listRoutePath = '';
                 }
                 var addObject = {
-                  type: 'collection',
-                  item_type: pageRoute.meta.page_type.data.id,
+                  type: 'collection', 
+                  item_type: pageRoute.meta.item_type.data.id,
                   path: listRoute.path,
                   full_path: pageRouteKey + listRoute.path,
                   template: listRoute.template,
                 };
+                //console.log(pageRouteKey + listRoutePath);
                 //listRoute.type = 'collection';
                 //listRoute.item_type = pageRoute.meta.page_type.data.id;
                 routes[pageRouteKey + listRoutePath] = addObject;
@@ -154,6 +167,7 @@ module.exports = function(app) {
         conf.set('start_page', startPage);
         conf.set('routes', routes);
         conf.set('page_routes', pageRoutes);
+        conf.set('pages', pages);
         next();
       });
     } else {
