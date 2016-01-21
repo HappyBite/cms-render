@@ -13,28 +13,52 @@
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
       <!-- Slide #1 -->
-      {% for slide in slides %}
+      {% for slide in slides %}  
         {% set image = slide.relationships.image | include %}
         <div class="item{%if loop.index0 === 0%} active{%endif%}" id="item-{{loop.index}}">
-          <div class="container">
+          <div class="container" style="isplay: none">
             <div class="row">
               <div class="col-sm-6"> 
-                <div class="fully-responsive">
+                <div class="fully-responsive ext-center">
                   <h3 class="fully-responsive__title animated slideInDown g-delay_1">{{slide.attributes.heading}}</h3>
-                  <!--<div class="fully-responsive__text animated slideInDown g-delay_2">
-                    Ingress
-                  </div>-->
-                  <p class="animated fadeInUp g-delay_5">
-                    {{slide.attributes.text}}
-                  </p>
+                  <div>
+                    <!--<div class="slogan animated fadeInDownBig g-delay_2">Premium Bootstrap template</div>-->
+                    {% if slide.attributes.excerpt %}
+                    <div class="fully-responsive__text animated slideInDown g-delay_2">
+                      {{slide.attributes.excerpt}}
+                    </div>
+                    {% endif %}
+                    {% if slide.attributes.text %}
+                    <p class="animated fadeInUp g-delay_5">
+                      {{slide.attributes.text}}
+                    </p>
+                    {% endif %}
+                  </div>
+                  {% if slide.attributes.link %}
                   <div class="fully-responsive__btns">
                     <a class="btn btn-lg btn-red fully-responsive-btns__btn animated fadeInUpBig g-delay_5">{{slide.attributes.link_text}}</a>
-                    <!--<a class="btn btn-lg btn-default fully-responsive-btns__btn animated fadeInUpBig g-delay_5">Read more</a>-->
+                    <!--<a class="btn btn-lg btn-default fully-responsive-btns__btn animated fadeInUpBig g-delay_5">{{slide.attributes.link_text}}</a>-->
                   </div>
+                  {% endif %}
                 </div>
               </div>
             </div> <!-- / .row -->
           </div> <!-- / .container -->
+          <!--<div class="container">
+            <div class="row">
+              <div class="col-sm-6">
+                <img class="img-responsive logo-img animated fadeInDownBig g-delay_1" src="/assets/img/logo-lg.png" alt="...">
+                <span class="img-responsive logo-img animated fadeInDownBig g-delay_1"
+                style="font-size: 90px;font-weight: 900;text-align: center;color:#3cabd8;ont-family:helvetica;margin-bottom:-10px;margin-top: 140px;"><span style="color:#505050;">telac</span></span>
+                <div class="text-center">
+                  <span class="slogan animated fadeInDownBig g-delay_2">Premium Bootstrap template</span>
+                  <p class="text-center animated fadeInUpBig g-delay_3">
+                    Powerful responsive theme great for corporate websites, web &amp; mobile apps. Built with Bootstrap 3, it combines all of its great features with our clean user-friendly layout.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>-->
           {% if image %}
           <div class="bg-img hidden-xs">
             <img src="{{ image.id | asset_url }}" alt="">
@@ -42,53 +66,6 @@
           {% endif %}
         </div> <!-- / .item -->
       {% endfor %}
-      {#
-      <!-- Slide #2 -->
-      <div class="item" id="item-2">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="fully-responsive">
-                <h3 class="fully-responsive__title animated slideInDown g-delay_1">Fully responsive design</h3>
-                <div class="fully-responsive__text animated slideInDown g-delay_2">
-                  Looks great on all major browsers, tablets and phones
-                </div>
-                <p class="animated fadeInUp g-delay_5">
-                  Easily and efficiently scales your websites and applications with a single code base, from phones to tablets to desktops with CSS media queries.
-                </p>
-                <div class="fully-responsive__btns">
-                  <a class="btn btn-lg btn-red fully-responsive-btns__btn animated fadeInUpBig g-delay_5">Purchase</a> <a class="btn btn-lg btn-default fully-responsive-btns__btn animated fadeInUpBig g-delay_5">Read more</a>
-                </div>
-              </div>
-            </div>
-          </div> <!-- / .row -->
-        </div> <!-- / .container -->
-        <div class="bg-img hidden-xs">
-          <img src="/assets/img/item-2.png" alt="...">
-        </div>
-      </div> <!-- / .item -->
-      <!-- Slide #3 -->
-      <div class="item" id="item-3">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="key-features primary">
-                <span class="animated slideInLeft g-delay_1"><i class="fa fa-check"></i> Proudly built with Twitter Bootstrap 3x</span> <br />
-                <span class="animated slideInLeft g-delay_2"><i class="fa fa-check"></i> 15+ easy to customize templates</span> <br />
-                <span class="animated slideInLeft g-delay_3"><i class="fa fa-check"></i> LESS files included</span>
-              </div>
-              <div class="key-features secondary">
-                <span class="animated fadeInUp g-delay_6">Powerful multi-purpose HTML5 template</span> <br />
-                <span class="animated fadeInUp g-delay_7">That works out of the box</span>
-              </div>
-            </div>
-          </div> <!-- / .row -->
-        </div> <!-- / .container -->
-        <div class="bg-img hidden-xs">
-          <img src="/assets/img/item-3.png" alt="...">
-        </div>
-      </div> <!-- / .item -->
-      #}
     </div> <!-- / .carousel -->
     <!-- Controls -->
     <a class="carousel-arrow carousel-arrow-prev" href="#home-slider" data-slide="prev">

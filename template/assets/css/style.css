@@ -6544,6 +6544,10 @@ a.carousel-arrow {
   -moz-transition: background 300ms;
   transition: background 300ms;
 }
+a.carousel-arrow .fa {
+  position:relative;
+  top: -1px;
+}
 .carousel:hover a.carousel-arrow {
   background: rgba(0, 0, 0, 0.2);
   color: #f6f6f6 !important;
@@ -6559,12 +6563,12 @@ a.carousel-arrow:active {
 a.carousel-arrow-prev {
   left: 20px;
   right: auto;
-  padding-right: 5px;
+  padding-right: 4px;
 }
 a.carousel-arrow-next {
   right: 20px;
   left: auto;
-  padding-left: 5px;
+  padding-left: 4px;
 }
 /*** Carousel Caption :: Portfolio ***/
 .portfolio-slideshow .carousel-caption {
@@ -7226,7 +7230,7 @@ Last change:    22/07/2014
 }
 .fully-responsive-btns__btn {
   font-weight: 400;
-  text-transform: capitalize;
+  text-transform: none;
 }
 /*** Item #3 ***/
 .home-slider .key-features.primary {
