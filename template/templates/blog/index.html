@@ -11,14 +11,14 @@
       <img src="/assets/img/photo-1.jpg" alt="...">
       <div class="blog-desc">
         <h3 class="blog-title">
-          <a href="/blogg/single/{{post.slug}}">{{post.title}}</a>
+          <a href="/blogg/post/{{post.slug}}">{{post.title}}</a>
         </h3>
         <hr>
         <p class="text-muted">by <a href="#" class="author-preview" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Pellentesque nulla leo, laoreet sed luctus eu, dapibus id lorem. Pellentesque eu tincidunt odio." data-original-title="John Doe">John Doe</a> on March 25, 2014</p>
         <p>
           {{post.summary}}
         </p>
-        <a class="btn btn-lg btn-red" href="blog-post.html">Read More...</a>
+        <a class="btn btn-lg btn-red" href="blog-post.html">Läs mer...</a>
         <a href="blog-post.html"><img class="img-responsive blog-img" src="/assets/img/general-3.jpg" alt="..."></a>
       </div>
     </div>
@@ -40,15 +40,10 @@
   
     <!-- Categories -->
     {% if categories.length %}
-    <h1 class="title-block second-child">Categories</h1>
+    <h1 class="title-block second-child">Kategorier</h1>
     <ul class="categories margin-bottom-30">
-      <li><a href="#">Databases</a></li>
-      <li class="active"><a href="#">Front End</a></li>
-      <li><a href="#">Hardware</a></li>
-      <li><a href="#">Management</a></li>
-      <li><a href="#">Security</a></li>
       {% for category in categories %}
-      <li><a href="/blogg/category/{{category.attributes.slug}}">{{category.attributes.title}}</a></li>
+        <li><a href="/blogg/category/{{category.attributes.slug}}">{{category.attributes.title}}</a></li>
       {% endfor %}
     </ul>
     {% endif %}

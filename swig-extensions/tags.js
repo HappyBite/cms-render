@@ -40,7 +40,7 @@ function compiler(compiler, args, content, parents, options, blockName) {
     var path = args[2].replace(/'/g, '');;
     var item_type = args[0].replace(/'/g, '');;
     //console.log('url: ' + url);
-    var currentRoute = utils.getCurrentRoute(url);
+    var currentRoute = utils.getCurrentRoute(url, {item_type: item_type, path: path});
     //var route_ids = [];
     //route_ids.push({slug: 'test'});
     // if (Object.keys(currentRoute.route_ids).length) {

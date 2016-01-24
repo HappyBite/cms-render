@@ -4,8 +4,31 @@ var client = require('./cms-client.js');
 var conf = require('nconf');
 
 module.exports = function(app) {  
-  
+  // app.use(function(req, res, next) {
+  //   var url = req.url;
+  //   var lastCharOnUrl = url.substring(url.length - 1, url.length); 
+  //   if(lastCharOnUrl !== '/') {
+  //     url = url + '/'
+  //     res.redirect(301, url);
+  //   } else {
+  //     next();
+  //   }
+  // });
+
   app.use(function(req, res, next) {   
+    // if (req.headers['git_hook'] || (req.body && req.body.git_hook) || req.query.git_hook) {
+    //   //app.cache = {};
+    //   //process.exit(1);
+    //   res.header('Cache-Control', 'max-age=0, must-revalidate');
+    //   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    //   res.header('Expires', '-1');
+    //   res.header('Pragma', 'no-cache');
+    //   res.removeHeader('Content-Length');
+    //   res.removeHeader('Cache-Control');
+    //   res.setHeader('X-Hijacked', 'yes!');
+    //   res.status('304').send('Git hook executed!!!');
+    //   return false;
+    // }
     if (!conf.get('items')) { 
       console.log('This will only show once!');
       async.parallel({
@@ -47,26 +70,23 @@ module.exports = function(app) {
         }
       }, 
       function(err, results) {
-        var itemTypes = results.item_types;
         var items = results.items;
+        var itemTypes = results.item_types;
         var meta = results.meta;
         var assets = results.assets;
-        var item_dictionary = {};
-        var asset_dictionary = {};
-        var routes = {};
-        var pageRoutes = {};
-        var pages = [];
-        var startPage;
-        var startPageId;
+        conf.set('items', items);
+        conf.set('item_types', itemTypes);
+        conf.set('meta', meta);
+        conf.set('assets', assets);
         if(typeof items === 'undefined') { 
           console.log('Failed connection to the API');
           res.send('Failed connection to the API');
           return false;
         }
-        /**
-         * Set item dictionary
-         * Set startpage
-         */
+        // Item dictionary
+        var item_dictionary = {};
+        var startPage;
+        var startPageId;
         for (var i = 0; i < items.length; i++) {
           var item = items[i];
           item_dictionary[item.id] = item;
@@ -75,19 +95,20 @@ module.exports = function(app) {
           } 
         } 
         startPage = item_dictionary[startPageId];
-        /**
-         * Set asset dictionary
-         */
+        conf.set('item_dictionary', item_dictionary);
+        
+        // Asset dictionary
+        var asset_dictionary = {};
         for (var i = 0; i < assets.length; i++) {
           var asset = assets[i];
           asset_dictionary[asset.id] = asset;
         }
+        conf.set('asset_dictionary', asset_dictionary);
          
-        /**
-         * Set pages
-         * Set page routes
-         * Set routes
-         */
+        // set page routes
+        var routes = {};
+        var pageRoutes = {};
+        var pages = [];
         routes['/'] = {type: 'page', id: startPage.id, path: '/'};
         pageRoutes['/'] = startPage; 
         for (var i = 0; i < items.length; i++) {
@@ -104,19 +125,49 @@ module.exports = function(app) {
             pages.push(page);
           } 
         }
-        /**
-         * Set cache
-         */
-        conf.set('item_types', itemTypes);
-        conf.set('items', items);
-        conf.set('meta', meta);
-        conf.set('assets', assets);
-        conf.set('item_dictionary', item_dictionary);
-        conf.set('asset_dictionary', asset_dictionary);
+        // set list routes
+        var listRoutes = {}; 
+        var metaConfig; 
+        for (var i = 0; i < meta.length; i++) { 
+          var item = meta[i];
+          if (item.id === 'config') {
+            metaConfig = item; 
+            break; 
+          }
+        }
+        if (metaConfig.attributes.value.routes) {
+          for (var pageRouteKey in pageRoutes) { 
+            //console.log(metaConfig.value.routes); 
+            var pageRoute = pageRoutes[pageRouteKey]; 
+            if (metaConfig.attributes.value.routes[pageRoute.meta.item_type.data.id]) {
+              var listRoutes = metaConfig.attributes.value.routes[pageRoute.meta.item_type.data.id];
+              for (var r in listRoutes) {
+                var listRoute = listRoutes[r];
+                var listRoutePath = listRoute.path.replace(/:/g, '~');
+                //listRoutePath = listRoute.path;
+                if (listRoutePath === '/') {
+                  listRoutePath = '';
+                }
+                var addObject = {
+                  type: 'collection', 
+                  item_type: pageRoute.meta.item_type.data.id,
+                  path: listRoute.path,
+                  full_path: pageRouteKey + listRoute.path,
+                  template: listRoute.template,
+                };
+                //console.log(pageRouteKey + listRoutePath);
+                //listRoute.type = 'collection';
+                //listRoute.item_type = pageRoute.meta.page_type.data.id;
+                routes[pageRouteKey + listRoutePath] = addObject;
+                listRoutes[pageRouteKey + listRoutePath] = addObject;
+              }
+            }
+          }
+        }
+        conf.set('start_page', startPage);
         conf.set('routes', routes);
         conf.set('page_routes', pageRoutes);
         conf.set('pages', pages);
-        conf.set('start_page', startPage);
         next();
       });
     } else {

@@ -88,10 +88,37 @@ module.exports = {
     * @return {object} route
     * @private
     */
-  getCurrentRoute: function(url) {
+  getCurrentRoute: function(url, customRoute) {
     var routes = cache.get('routes');
     var currentRoute = routes[url];
     var route_ids = {};
+    
+    if (customRoute) {
+      var pageRoutes = cache.get('page_routes');
+      for (var pageRouteKey in pageRoutes) { 
+        var listRoutePath = customRoute.path.replace(/:/g, '~');
+        if (listRoutePath === '/') {
+          listRoutePath = ''; 
+        }
+        //if(!routes[pageRouteKey + listRoutePath]) {
+          var pageRoute = pageRoutes[pageRouteKey]; 
+          if (pageRoute.meta.item_type.data.id === customRoute.item_type) {
+            var addObject = {
+              type: 'collection',
+              item_type: pageRoute.meta.item_type.data.id,
+              path: customRoute.path,
+              full_path: pageRouteKey + customRoute.path,
+              template: '?'
+            };
+            routes[pageRouteKey + listRoutePath] = addObject;
+            cache.set('routes', routes);
+            // console.log(pageRouteKey + listRoutePath);
+            // console.log(routes[pageRouteKey + listRoutePath]);
+          }
+        //}
+      }
+    }
+
     if (!currentRoute) {
       // console.log('');  
       // console.log('---------------------------------------------------');  
@@ -100,6 +127,8 @@ module.exports = {
       var patt = /(\~)(\w+)/g;
       for (var routeKey in routes) {
         var route = routes[routeKey];
+        // console.log(routeKey);
+        // console.log(route);
         var routeMatcher = new RegExp(routeKey.replace(/~[^\s/]+/g, '([\\w-]+)'));
         var matcher = url.match(routeMatcher);
         if(matcher) {
@@ -107,7 +136,7 @@ module.exports = {
           if(res === url) {
             // console.log('Test: ' + routeMatcher.test(url));
             // console.log('Found match: ' + res);
-            console.log(route.full_path);
+            // console.log(route.full_path);
             var routePathSplit = route.full_path.split('/:');
             for (var i = 0; i < matcher.length; i++) {
               if (i > 0) {
@@ -121,7 +150,19 @@ module.exports = {
         }
       }
     }
-    currentRoute.ids = route_ids;
+    if (currentRoute) {
+      currentRoute.ids = route_ids;
+    } else {
+      currentRoute = {
+        type: '', 
+        item_type: '',
+        path: '',
+        full_path: '',
+        template: '',
+        ids: null
+      }
+    }
+    //console.log(currentRoute.ids);
     return currentRoute;
   }
 };

@@ -2,12 +2,12 @@
   {% include 'templates/blog/index.html' %}
 {% endget %}
 
-{% get 'blog' '/:id'  %}
-  {% include 'templates/blog/category.html' %}
+{% get 'blog' '/post/:id'  %}
+  {% include 'templates/blog/single.html' %}
 {% endget %}
 
 {% get 'blog' '/category' %}
-  {% include 'templates/blog/category.html' 'slug' %}
+  {% include 'templates/blog/category.html' %}
 {% endget %}
 
 {% get 'blog' '/category/:slug' %}
@@ -15,7 +15,7 @@
 {% endget %}
 
 {% get 'blog' '/archive/:y/:m/:d' %}
-  {% include 'templates/blog/category.html' %}
+  {% include 'templates/blog/archive.html' %}
 {% endget %}
 
 {% get 'page' %}
