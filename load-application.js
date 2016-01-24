@@ -3,7 +3,7 @@ var async = require('async');
 var client = require('./cms-client.js'); 
 var conf = require('nconf');
 
-module.exports = function(app) { 
+module.exports = function(app) {  
   // app.use(function(req, res, next) {
   //   var url = req.url;
   //   var lastCharOnUrl = url.substring(url.length - 1, url.length); 
