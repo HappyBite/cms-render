@@ -2,10 +2,10 @@ var swig = require('swig');
 var async = require('async');
 var sync = require('sync');
 var client = require('../cms-client.js'); 
-var cache = require('nconf'); 
+var cache = require('nconf');  
 var querystring = require('querystring');  
 var utils = require('./utils');  
-
+ 
 // Returns an API resource
 swig.setFilter('asset_url', function (id, query) {
   var assetDictionary = cache.get('asset_dictionary');
@@ -40,14 +40,19 @@ swig.setFilter('resource', function (resource, query) {
 });
 
 // Gets the current page
-swig.setFilter('current_page', function (url) {
-  var routes = cache.get('page_routes');
-  return routes[url];
-});
+// swig.setFilter('current_page', function (url) {
+//   var routes = cache.get('page_routes');
+//   return routes[url];
+// });
 
 // Gets all pages
-swig.setFilter('pages', function (url) {
+swig.setFilter('pages', function () {
   return cache.get('pages');
+});
+
+// Gets page routes
+swig.setFilter('page_routes', function (url) {
+  return cache.get('page_routes');
 });
 
 // Get current route

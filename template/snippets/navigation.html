@@ -1,23 +1,25 @@
-<ul class="nav navbar-nav navbar-right">
-  {% for page in pages %}
-    {% set page_path = page.attributes.path %}
-    {% set page_name = page.attributes.display_name %}
-    {% set page_type_id = page.meta.item_type.data.id %}
-    {% set is_active = false %}
-    {% if page_path === url %}
-      {% set is_active = true %}
-    {% endif %}
-    {% if url === '/' and page.id === start_page.id %}
-      {% set is_active = true %}
-    {% endif %}
+{% set current_route = url | route %}
 
-    <li role="presentation"{% if is_active %} class="active"{%endif%}>
-      {% if page_type_id === 'link' %}
-        <a target="{{page.attributes.target}}" href="{{page.attributes.url}}">{{page_name}}</a>
-      {% else %}
-        <a href="{{page_path}}">{{page_name}}</a>
+{# {{current_route|json}} #}
+<ul class="nav navbar-nav navbar-right">
+  {% for page in page_routes %}
+    {% if loop.key !== '/' %}
+      {% set is_active = false %}
+      {% if page.attributes.path === url || page.attributes.path === current_route.page_path %}
+        {% set is_active = true %}
       {% endif %}
-    </li>
+      {% if url === '/' && page.id === start_page.id %}
+        {% set is_active = true %}
+      {% endif %}
+
+      <li role="presentation"{% if is_active %} class="active"{%endif%}>
+        {% if page.meta.item_type.data.id === 'link' %}
+          <a target="{{page.attributes.target}}" href="{{page.attributes.url}}">{{page.attributes.display_name}}</a>
+        {% else %}
+          <a href="{{page.attributes.path}}">{{page.attributes.display_name}}</a>
+        {% endif %}
+      </li>
+    {% endif %}  
   {% endfor %}
   
   <!-- Navbar Search -->

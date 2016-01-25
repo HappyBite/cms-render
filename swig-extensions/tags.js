@@ -1,13 +1,13 @@
 var swig = require('swig');
-var _utils = require('swig/lib/utils');
-var utils = require('./utils');
+var _utils = require('swig/lib/utils'); 
+var utils = require('./utils'); 
 var async = require('async');
 var sync = require('sync');
-var client = require('../cms-client.js'); 
+var client = require('../cms-client.js');  
 var cache = require('nconf'); 
 var querystring = require('querystring'); 
 
-function parser (str, line, parser, types, options, swig) {
+function parser (str, line, parser, types, options, swig) {  
   parser.on(types.STRING, function (token) {
     //console.log(parser);
     //swig.locals['valuee'] = 'asdf';
@@ -41,6 +41,8 @@ function compiler(compiler, args, content, parents, options, blockName) {
     var item_type = args[0].replace(/'/g, '');;
     //console.log('url: ' + url);
     var currentRoute = utils.getCurrentRoute(url, {item_type: item_type, path: path});
+    //console.log(path);
+    //console.log(currentRoute)
     //var route_ids = [];
     //route_ids.push({slug: 'test'});
     // if (Object.keys(currentRoute.route_ids).length) {
@@ -57,7 +59,7 @@ function compiler(compiler, args, content, parents, options, blockName) {
     //console.log('route: ' + utils.getCurrentRoute(url).path);
     //console.log(currentRoute.item_type);
     
-    if(currentRoute.path === path && currentRoute.item_type === item_type && currentRoute.type === 'collection') {
+    if(currentRoute && currentRoute.path === path && currentRoute.item_type === item_type && currentRoute.type === 'collection') {
       //return '_output += "Jippi! En route matchades!";\n';
       var val = [].shift();
       var key = '__k';

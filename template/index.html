@@ -1,5 +1,17 @@
 {# Set up global variables and model objects #}
-{% set pages = '' | pages %}
-{% set current_page = url | current_page %}
+
+{# 
+{% set items = 'items' | resource %}
+{% set pages = {} %}
+{% for item in items %}
+  {% if item.meta.item_type.data.id === 'nav-menu-item' %}
+      {% set pages[item.attributes.slug] = item %}
+  {% endif %}
+{% endfor %}
+{{pages | json}}
+#}
+
+{% set page_routes = '' | page_routes %}
+{% set current_page = page_routes[url] %}
 
 {% include 'layouts/default.html' %}

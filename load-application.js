@@ -5,6 +5,8 @@ var conf = require('nconf');
 
 module.exports = function(app) {  
   
+  var firstLoad = false;
+
   app.use(function(req, res, next) {   
     if (!conf.get('items')) { 
       console.log('This will only show once!');
@@ -89,7 +91,7 @@ module.exports = function(app) {
          * Set routes
          */
         routes['/'] = {type: 'page', id: startPage.id, path: '/'};
-        pageRoutes['/'] = startPage; 
+        pageRoutes['/'] = startPage;
         for (var i = 0; i < items.length; i++) {
           var item = items[i];
           if(item.meta.item_type.data.id === 'nav-menu-item') {
@@ -117,12 +119,14 @@ module.exports = function(app) {
         conf.set('page_routes', pageRoutes);
         conf.set('pages', pages);
         conf.set('start_page', startPage);
+        firstLoad = true;
         next();
       });
     } else {
+      firstLoad = false;
       next();
     }
-  });
+  }); 
   
   // Middleware
   app.use(function(req, res, next) {
@@ -130,7 +134,7 @@ module.exports = function(app) {
     var startPage = conf.get('start_page');
     var lastCharOnUrl = url.substring(url.length - 1, url.length);
     if(lastCharOnUrl === '/' && url !== '/') {
-      url = url.substring(0, url.length - 1)
+      url = url.substring(0, url.length - 1) 
     }
     var defaults = {
       url: url,
@@ -147,6 +151,10 @@ module.exports = function(app) {
       //console.log(url);
       // It's in seconds. This will be cached for 1 minute.
       //res.header('Cache-Control', 'max-age=60, must-revalidate');
+      // Att routes to the context on first load
+      if (firstLoad) {
+        swig.renderFile('template/index.html', model);
+      }
       return res.render('index', model);
     }
     next();
