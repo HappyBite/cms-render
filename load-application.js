@@ -9,7 +9,7 @@ module.exports = function(app) {
 
   app.use(function(req, res, next) {   
     if (!conf.get('items')) { 
-      console.log('This will only show once!');
+      console.log('This will only show once!'); 
       async.parallel({
         item_types: function(callback) {
           client.itemTypes({}, function(err, itemTypes) {
@@ -57,7 +57,6 @@ module.exports = function(app) {
         var asset_dictionary = {};
         var routes = {};
         var pageRoutes = {};
-        var pages = [];
         var startPage;
         var startPageId;
         if(typeof items === 'undefined') { 
@@ -74,7 +73,7 @@ module.exports = function(app) {
           item_dictionary[item.id] = item;
           if(item.attributes.start_page) {
             startPageId = item.relationships.page.data.id;
-          } 
+          }
         } 
         startPage = item_dictionary[startPageId];
         /**
@@ -86,11 +85,9 @@ module.exports = function(app) {
         }
          
         /**
-         * Set pages
-         * Set page routes
          * Set routes
          */
-        routes['/'] = {type: 'page', id: startPage.id, path: '/'};
+        routes['/'] = {type: 'page', id: startPage.id, item_type: startPage.meta.item_type.data.id, path: '/'};
         pageRoutes['/'] = startPage;
         for (var i = 0; i < items.length; i++) {
           var item = items[i];
@@ -101,14 +98,13 @@ module.exports = function(app) {
             page.attributes.display_name = item.attributes.display_name;
             page.attributes.start_page = item.attributes.start_page;
             page.meta.position = item.meta.position;
-            routes['/' + page.attributes.slug] = {type: 'page', id: page.id, path: page.attributes.path}; 
-            pageRoutes['/' + page.attributes.slug] = page;
-            pages.push(page);
+            routes['/' + page.attributes.slug] = {type: 'page', id: page.id, item_type: page.meta.item_type.data.id, path: page.attributes.path}; 
+            pageRoutes['/' + page.attributes.slug] = {type: 'page', id: page.id, item_type: page.meta.item_type.data.id, path: page.attributes.path}; 
           } 
         }
         /**
          * Set cache
-         */
+         */ 
         conf.set('item_types', itemTypes);
         conf.set('items', items);
         conf.set('meta', meta);
@@ -117,8 +113,6 @@ module.exports = function(app) {
         conf.set('asset_dictionary', asset_dictionary);
         conf.set('routes', routes);
         conf.set('page_routes', pageRoutes);
-        conf.set('pages', pages);
-        conf.set('start_page', startPage);
         firstLoad = true;
         next();
       });
@@ -131,7 +125,6 @@ module.exports = function(app) {
   // Middleware
   app.use(function(req, res, next) {
     var url = req.url;
-    var startPage = conf.get('start_page');
     var lastCharOnUrl = url.substring(url.length - 1, url.length);
     if(lastCharOnUrl === '/' && url !== '/') {
       url = url.substring(0, url.length - 1) 
@@ -139,19 +132,13 @@ module.exports = function(app) {
     var defaults = {
       url: url,
     };
-    var model = {
-      start_page: startPage
-    };
+    var model = {};
     swig.setDefaults({locals: defaults});
-    //console.log(url);
-    //console.log(url.lastIndexOf(url.length - 1, url.length));
-    //console.log(url.substring(url.length - 1, url.length));
-    //console.log(url.substring(0, url.length - 1));
     if (!~url.indexOf('.')) {
-      //console.log(url);
       // It's in seconds. This will be cached for 1 minute.
       //res.header('Cache-Control', 'max-age=60, must-revalidate');
-      // Att routes to the context on first load
+      
+      // Add routes to the context on first load
       if (firstLoad) {
         swig.renderFile('template/index.html', model);
       }
@@ -160,45 +147,3 @@ module.exports = function(app) {
     next();
   });
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// app.get('/', function (req, res) {
-  //   var model = { name: 'Swig templates are here to stay and this is the first page : )', time: process.env.TIMES };
-  //   res.render('index', model);
-  // });
-
-  // app.get('/:slug', function (req, res) {
-  //   var slug = req.params.slug;
-  //   var model = { name: 'Swig templates are here to stay and this is an other page with slug ' + slug + ' : )', time: process.env.TIMES };
-  //   res.render('index', model);
-  // });

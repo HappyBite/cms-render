@@ -94,25 +94,28 @@ module.exports = {
     var route_ids = {};
     
     if (customRoute) {
-      var pageRoutes = cache.get('page_routes');
+      var pageRoutes = cache.get('routes');
       for (var pageRouteKey in pageRoutes) {
         var listRoutePath = customRoute.path.replace(/:/g, '~');
         listRoutePath = listRoutePath !== '/' ? listRoutePath : '';
-        var pageRoute = pageRoutes[pageRouteKey];
-        if (pageRoute.item_type === customRoute.item_type) {
-          var addObject = {
-            type: 'collection',
-            item_type: pageRoute.item_type,
-            path: customRoute.path,
-            full_path: pageRouteKey + (customRoute.path !== '/' ? customRoute.path : ''),
-            page_path: pageRoute.path
-            //template: 'none'
-          };
-          routes[pageRouteKey + listRoutePath] = addObject;
-          //console.log(routes[pageRouteKey + listRoutePath]);
-        }
+        //if(!routes[pageRouteKey + listRoutePath]) {
+          var pageRoute = pageRoutes[pageRouteKey]; 
+          if (pageRoute.meta.item_type.data.id === customRoute.item_type) {
+            var addObject = {
+              type: 'collection',
+              item_type: pageRoute.meta.item_type.data.id,
+              path: customRoute.path,
+              full_path: pageRouteKey + (customRoute.path !== '/' ? customRoute.path : ''),
+              page_path: pageRoute.attributes.path
+              //template: 'none'
+            };
+            routes[pageRouteKey + listRoutePath] = addObject;
+            cache.set('routes', routes);
+            // console.log(pageRouteKey + listRoutePath);
+            // console.log(routes[pageRouteKey + listRoutePath]);
+          }
+        //}
       }
-      cache.set('routes', routes);
     }
 
     //if (!currentRoute || customRoute) {

@@ -1,0 +1,35 @@
+{# Set up global variables and model objects #}
+
+{# Get all items #}
+{% set items = 'items' | resource %}
+
+{# 
+ # Create page dictionary from item type "nav-menu-item" and cache it.
+ # This is a default item type and You can use this for the navigation
+ # and also for getting the current_page etc.
+ #}
+{% set pages = 'pages' | get_cache %}
+{% if !pages %}
+  {% set pages = {} %}
+  {% for item in items %}
+    {% if item.meta.item_type.data.id === 'nav-menu-item' %}
+      {% set page = item.relationships.page | include %}
+      {% set page['attributes.slug'] = item.attributes.slug %}
+      {% set page['attributes.path'] = item.attributes.path %}
+      {% set page['attributes.display_name'] = item.attributes.display_name %}
+      {% set page['attributes.start_page'] = item.attributes.start_page %}
+      {% set page['meta.position'] = item.meta.position %}
+      {% set page_attributes_slug = '/' + page.attributes.slug %}
+      {% set pages[page_attributes_slug] = page %}
+      {% if item.meta.item_type.data.id === 'nav-menu-item' && item.attributes.start_page %}
+        {% set pages['/'] = page %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+  {{ 'pages' | set_cache(pages) }}
+{% endif %}
+
+{% set start_page = pages['/'] %}
+{% set current_page = pages[url] %}
+
+{% block layout %}{% endblock %}

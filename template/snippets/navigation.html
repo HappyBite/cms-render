@@ -2,7 +2,7 @@
 
 {# {{current_route|json}} #}
 <ul class="nav navbar-nav navbar-right">
-  {% for page in page_routes %}
+  {% for page in pages %}
     {% if loop.key !== '/' %}
       {% set is_active = false %}
       {% if page.attributes.path === url || page.attributes.path === current_route.page_path %}

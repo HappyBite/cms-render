@@ -7,6 +7,7 @@ var querystring = require('querystring');
 var utils = require('./utils');  
  
 /**
+ * Asset url
  * Yields the media url for the requested media item
  * @param {string} id
  */
@@ -16,18 +17,9 @@ swig.setFilter('asset_url', function (id) {
     return;
   }
   return assetDictionary[id].attributes.file.url;
-}); 
+});
 
-/**
- * Yields an API resource
- * @example
- * {{ 'items' | resource('type=blog-post') }}
- * 
- * @param {string} item-types | items | meta | assets
- * @param {string} type=blog-post
- * 
- * @return {object} item-types | items | meta | assets
- */
+// Returns an API resource
 swig.setFilter('resource', function (resource, query) {
   var res;
   if (resource === 'items') { 
@@ -51,27 +43,28 @@ swig.setFilter('resource', function (resource, query) {
   return res;
 });
 
-/**
- * Yields the route that corresponds to the url
- * @example
- * {% set current_route = url | route %}
- * 
- * @param {string} url
- * 
- * @return {object} route
- */
+// Gets the current page
+swig.setFilter('current_page', function (url) {
+  var routes = cache.get('page_routes');
+  return routes[url];
+});
+
+// Gets all pages
+swig.setFilter('pages', function () {
+  return cache.get('pages');
+});
+
+// Gets page routes
+swig.setFilter('page_routes', function (url) {
+  return cache.get('page_routes');
+});
+
+// Get current route
 swig.setFilter('route', function (url) {
   return utils.getCurrentRoute(url);
 });
 
-/**
- * Yields relationships for a property
- * @example
- * item.attributes.image | include
-
- * @param  {object} property {data: {type: 'items', id: 'slider-1'}}
- * @return {object} item/s or asset/s
- */
+// Get relationships for a property
 swig.setFilter('include', function (property) {
   var relations;
   var item;
@@ -102,30 +95,4 @@ swig.setFilter('include', function (property) {
     }
   }
   return relations;
-});
-
-/**
- * Get cache
- * @example
- * 'pages' | get_cache
-
- * @param  {string} key
- * @return {object} 
- */
-swig.setFilter('get_cache', function (key) {
-  return cache.get('swig-' + key);
-});
-
-/**
- * Set cache
- * @example
- * 'pages' | set_cache(obj)
-
- * @param  {string} key
- * @param  {object} obj
- * @return {object} 
- */
-swig.setFilter('set_cache', function (key, obj) {
-  cache.set('swig-' + key, obj);
-  return '';
 });

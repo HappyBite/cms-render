@@ -1,17 +1,19 @@
-{# Set up global variables and model objects #}
-
 {# 
-{% set items = 'items' | resource %}
-{% set pages = {} %}
-{% for item in items %}
-  {% if item.meta.item_type.data.id === 'nav-menu-item' %}
-      {% set pages[item.attributes.slug] = item %}
-  {% endif %}
-{% endfor %}
-{{pages | json}}
-#}
+ # Data.html contains global variables and custom model objects.
+ # It works as the data factory for your website.
+ # Change as you please : )
+ # It generates the following object variables:
+ #  - pages         => You can use this for the navigation and look up pages
+ #  - current_page  => Always gives you the current page object
+ #  - start_page    => Always gives you the start page
+ #}
+{% extends 'snippets/data.html' %}
 
-{% set page_routes = '' | page_routes %}
-{% set current_page = page_routes[url] %}
-
-{% include 'layouts/default.html' %}
+{#
+ # You can build your architecture in any way you please.
+ # This is just one way of doing it.
+ # Change as you please : )
+ #}
+{% block layout %}
+  {% include 'layouts/default.html' %}
+{% endblock %}
