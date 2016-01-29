@@ -7750,10 +7750,10 @@ Created:        28/04/2014
 Last change:    22/07/2014
 -------------------------------------------------------------------*/
 /* ===== Blog ===== */
-.blog {
+.post {
   margin-bottom: 10px;
 }
-.blog > img {
+.post > img {
   width: 70px;
   height: 70px;
   border-radius: 70px;
@@ -7761,34 +7761,34 @@ Last change:    22/07/2014
   margin-right: 20px;
 }
 @media (max-width: 767px) {
-  .blog > img {
+  .post > img {
     display: none;
   }
 }
-.blog-desc {
+.post-desc {
   overflow: hidden;
 }
-.blog-desc > .blog-title {
+.post-desc > .post-title {
   margin-top: 0;
   font-size: 22px;
   font-weight: 700;
   line-height: 1.5;
   text-transform: capitalize;
 }
-.blog-desc > .blog-title a {
+.post-desc > .post-title a {
   color: #505050;
   -webkit-transition: color 300ms;
   -moz-transition: color 300ms;
   transition: color 300ms;
 }
-.blog-desc > .blog-title a:hover {
+.post-desc > .post-title a:hover {
   color: #ec7263;
   text-decoration: none;
 }
-.blog-desc > p {
+.post-desc > p {
   margin-bottom: 30px;
 }
-.blog-desc .blog-img {
+.post-desc .post-img {
   border-radius: 3px;
   margin: 20px 0;
 }

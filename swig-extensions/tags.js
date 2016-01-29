@@ -23,11 +23,13 @@ function parser (str, line, parser, types, options, swig) {
 
 function compiler(compiler, args, content, parents, options, blockName) {
   //console.log(args);
-  if(args && args.length === 2) { 
+  if(args && args.length === 2) {
     var url = args[1].replace(/'/g, '');
     var currentRoute = utils.getCurrentRoute(url);
     var page = args[0].replace(/'/g, '');
+    //console.log(currentRoute);
     if(page === 'page' && currentRoute.type === 'page') {
+    //if(!currentRoute && page === 'page') {
       return compiler(content, parents, options, blockName) + '\n';
     } else {
       return false;
@@ -37,8 +39,8 @@ function compiler(compiler, args, content, parents, options, blockName) {
     return '_output += "Metoden \\"get\\" är felkonstruerad";\n';
   } else {
     var url = args[3].replace(/'/g, '');
-    var path = args[2].replace(/'/g, '');;
-    var item_type = args[0].replace(/'/g, '');;
+    var path = args[2].replace(/'/g, '');
+    var item_type = args[0].replace(/'/g, '');
     //console.log('url: ' + url);
     var currentRoute = utils.getCurrentRoute(url, {item_type: item_type, path: path});
     //console.log(path);
@@ -59,7 +61,10 @@ function compiler(compiler, args, content, parents, options, blockName) {
     //console.log('route: ' + utils.getCurrentRoute(url).path);
     //console.log(currentRoute.item_type);
     
-    if(currentRoute && currentRoute.path === path && currentRoute.item_type === item_type && currentRoute.type === 'collection') {
+    if(path === '/') {
+      path = '';
+    }
+    if(currentRoute && currentRoute.path === currentRoute.page_path + path && currentRoute.item_type === item_type && currentRoute.type === 'collection') {
       //return '_output += "Jippi! En route matchades!";\n';
       var val = [].shift();
       var key = '__k';

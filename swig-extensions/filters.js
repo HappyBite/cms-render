@@ -2,7 +2,7 @@ var swig = require('swig');
 var async = require('async');
 var sync = require('sync');
 var client = require('../cms-client.js'); 
-var cache = require('nconf');  
+var cache = require('nconf');   
 var querystring = require('querystring');  
 var utils = require('./utils');  
  
@@ -30,7 +30,7 @@ swig.setFilter('asset_url', function (id) {
  */
 swig.setFilter('resource', function (resource, query) {
   var res;
-  if (resource === 'items') { 
+  if (resource === 'items') {
     res = cache.get('items');
     if(query) {
       res = utils.filterItems(res, query);
@@ -95,7 +95,7 @@ swig.setFilter('include', function (property) {
       }
     }
   } else if (typeof property.data === 'object') {
-    relations = {};  
+    relations = {};
     if (Object.keys(property.data).length) {
       item = itemDictionary[property.data.id];
       relations = item;  
@@ -128,4 +128,31 @@ swig.setFilter('get_cache', function (key) {
 swig.setFilter('set_cache', function (key, obj) {
   cache.set('swig-' + key, obj);
   return '';
+});
+
+/**
+ * Regular expression match
+ * @example
+ * 'hello' | match('hello') %}
+
+ * @param  {string} str
+ * @param  {string} str
+ * @return {string} 
+ */
+swig.setFilter('match', function (str, regExp) {
+  //console.log(regExp)
+  return str.match(new RegExp(regExp));
+});
+
+/**
+ * Split string
+ * @example
+ * 'hello, herro' | split(',') %}
+
+ * @param  {string} str
+ * @param  {string} chars
+ * @return {string} 
+ */
+swig.setFilter('split', function (str, chars) {
+  return str.split(chars);
 });

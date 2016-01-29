@@ -2,32 +2,32 @@ var swig = require('swig');
 var async = require('async');
 var client = require('./cms-client.js'); 
 var conf = require('nconf');
-
-module.exports = function(app) {  
+  
+module.exports = function(app) {    
   
   var firstLoad = false;
-
-  app.use(function(req, res, next) {   
-    if (!conf.get('items')) { 
+   
+  app.use(function(req, res, next) {    
+    if (!conf.get('items')) {   
       console.log('This will only show once!'); 
       async.parallel({
         item_types: function(callback) {
           client.itemTypes({}, function(err, itemTypes) {
-            if (err) {
+            if (err) { 
               callback(err);
             } else {
-              callback(null, itemTypes);
+              callback(null, itemTypes); 
             }
           });
         },
         items: function(callback) {
           client.items({}, function(err, items) {
-            if (err) {
+            if (err) { 
               callback(err);
             } else {
               callback(null, items);
             }
-          });
+          }); 
         },
         meta: function(callback) {
           client.meta({}, function(err, items) {
@@ -44,12 +44,12 @@ module.exports = function(app) {
               callback(err);
             } else {
               callback(null, items);
-            }
+            } 
           });
         }
       }, 
-      function(err, results) {
-        var itemTypes = results.item_types;
+      function(err, results) { 
+        var itemTypes = results.item_types; 
         var items = results.items;
         var meta = results.meta;
         var assets = results.assets;
@@ -87,7 +87,7 @@ module.exports = function(app) {
         /**
          * Set routes
          */
-        routes['/'] = {type: 'page', id: startPage.id, item_type: startPage.meta.item_type.data.id, path: '/'};
+        routes['/'] = {type: 'page', item_type: startPage.meta.item_type.data.id, path: '/'};
         pageRoutes['/'] = startPage;
         for (var i = 0; i < items.length; i++) {
           var item = items[i];
@@ -98,8 +98,8 @@ module.exports = function(app) {
             page.attributes.display_name = item.attributes.display_name;
             page.attributes.start_page = item.attributes.start_page;
             page.meta.position = item.meta.position;
-            routes['/' + page.attributes.slug] = {type: 'page', id: page.id, item_type: page.meta.item_type.data.id, path: page.attributes.path}; 
-            pageRoutes['/' + page.attributes.slug] = {type: 'page', id: page.id, item_type: page.meta.item_type.data.id, path: page.attributes.path}; 
+            routes['/' + page.attributes.slug] = {type: 'page', item_type: page.meta.item_type.data.id, path: page.attributes.path}; 
+            pageRoutes['/' + page.attributes.slug] = {type: 'page', item_type: page.meta.item_type.data.id, path: page.attributes.path}; 
           } 
         }
         /**

@@ -1,11 +1,18 @@
-{# Set up global variables and model objects #}
+{#
+ # Router.html is a macro for handling routing.
+ # It works as the router for your website.
+ # Routes.html uses this macro to get the correct route.
+ # It generates the following object variables:
+ #  - current_route => Use this object to get the id/ids for the current route
+ #}
+{% import 'router.html' as router %}
 
 {# Get all items #}
 {% set items = 'items' | resource %}
 
-{# 
+{#
  # Create page dictionary from item type "nav-menu-item" and cache it.
- # This is a default item type and You can use this for the navigation
+ # This is a default item type and you can use this for the navigation
  # and also for getting the current_page etc.
  #}
 {% set pages = 'pages' | get_cache %}
@@ -14,11 +21,11 @@
   {% for item in items %}
     {% if item.meta.item_type.data.id === 'nav-menu-item' %}
       {% set page = item.relationships.page | include %}
-      {% set page['attributes.slug'] = item.attributes.slug %}
-      {% set page['attributes.path'] = item.attributes.path %}
-      {% set page['attributes.display_name'] = item.attributes.display_name %}
-      {% set page['attributes.start_page'] = item.attributes.start_page %}
-      {% set page['meta.position'] = item.meta.position %}
+      {% set page['attributes']['slug'] = item.attributes.slug %}
+      {% set page['attributes']['path'] = item.attributes.path %}
+      {% set page['attributes']['display_name'] = item.attributes.display_name %}
+      {% set page['attributes']['start_page'] = item.attributes.start_page %}
+      {% set page['meta']['position'] = item.meta.position %}
       {% set page_attributes_slug = '/' + page.attributes.slug %}
       {% set pages[page_attributes_slug] = page %}
       {% if item.meta.item_type.data.id === 'nav-menu-item' && item.attributes.start_page %}
@@ -31,5 +38,7 @@
 
 {% set start_page = pages['/'] %}
 {% set current_page = pages[url] %}
+{# It generates the object variable: current_route #}
+{{ router.get('', '', url) }}
 
 {% block layout %}{% endblock %}

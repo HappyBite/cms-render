@@ -1,9 +1,7 @@
 {% set categories = 'items' | resource('type=blog-post-category') %}
 {% set config = 'meta_item' | resource('config') %}
 
-{{slug}}
-
-{% if slug %}
+{% if current_route.ids.slug %}
 <h1 class="title-lg"><span>Blog - Category</span></h1>
   en kategori
 {% else %}

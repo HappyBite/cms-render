@@ -17,6 +17,8 @@ module.exports = {
     // Cache this for better performance
     var query = querystring.parse(query);
     var filteredItems = [];
+    var filteredItems1 = [];
+    var filterMore = false;
     if(query['type[]'] || query['type']) {
       query['type[]'] = typeof query['type[]'] === 'string' ? [query['type[]']] : query['type[]'];
       query['type'] = typeof query['type'] === 'string' ? [query['type']] : query['type'];
@@ -33,7 +35,32 @@ module.exports = {
         }
       }
     }
-    return filteredItems;
+    for (var q in query) {
+      if(~q.indexOf('[eq]') || ~q.indexOf('[in]')) {
+        filterMore = true;
+        break;
+      }
+    }
+    if (filterMore) {
+      if (filteredItems.length) {
+        items = filteredItems;
+      }
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        for (var q in query) {
+          var qValue = query[q];
+          if(~q.indexOf('[eq]')) {
+            var qSplit = q.replace('[eq]', '').split('.');
+            if(item[qSplit[0]][qSplit[1]] === qValue) {
+              filteredItems1.push(item);
+            }  
+          }
+        }
+      }
+      return filteredItems1;  
+    } else {
+      return filteredItems;
+    }
   },
 
   /**
@@ -103,8 +130,8 @@ module.exports = {
           var addObject = {
             type: 'collection',
             item_type: pageRoute.item_type,
-            path: customRoute.path,
-            full_path: pageRouteKey + (customRoute.path !== '/' ? customRoute.path : ''),
+            //path: customRoute.path,
+            path: pageRouteKey + (customRoute.path !== '/' ? customRoute.path : ''),
             page_path: pageRoute.path
             //template: 'none'
           };
@@ -125,17 +152,18 @@ module.exports = {
         var route = routes[routeKey];
         // console.log(routeKey);
         // console.log(route);
-        if (route.full_path) {
-          var routeMatcher = new RegExp(route.full_path.replace(/:[^\s/]+/g, '([\\w-]+)'));
+        if (route.path) {
+          //var routeMatcher = new RegExp(route.path.replace(/:[^\s/]+/g, '([\\w-]+)'));
+          var routeMatcher = route.path.replace(/:[^\s/]+/g, '([\\w-]+)');
           var matcher = url.match(routeMatcher);
           if(matcher) { 
             res = matcher[0];
             if(res === url) { 
               // console.log('Test: ' + routeMatcher.test(url));
               // console.log('Found match: ' + res);
-              // console.log(route.full_path);
-              if (route.full_path) {
-                var routePathSplit = route.full_path.split('/:');
+              // console.log(route.path);
+              if (route.path) {
+                var routePathSplit = route.path.split('/:');
                 for (var i = 0; i < matcher.length; i++) {
                   if (i > 0) {  
                     //console.log(routePathSplit[i] + ': ' + matcher[i]);
@@ -152,11 +180,11 @@ module.exports = {
     //}
     if (currentRoute) {
       currentRoute.ids = route_ids;
-      currentRoute.url = currentRoute.full_path;
+      //currentRoute.url = currentRoute.path;
       if(Object.keys(currentRoute.ids).length) {
         for (var key in currentRoute.ids) {
           var id = currentRoute.ids[key];
-          currentRoute.url = currentRoute.url.replace(':' + key, id);
+          //currentRoute.url = currentRoute.url.replace(':' + key, id);
         }
       }
       // var pageRoutes = cache.get('page_routes');
@@ -168,7 +196,7 @@ module.exports = {
     //     type: '',
     //     item_type: '',
     //     path: '',
-    //     full_path: '',
+    //     path: '',
     //     template: '',
     //     ids: null
     //   }

@@ -1,24 +1,24 @@
-{% if router.get('blog', '/') %}
+{% get 'blog' '/' %}
   {% include 'templates/blog/index.html' %}
-{% endif %}
+{% endget %}
 
-{% if router.get('blog', '/post/:slug') %}
+{% get 'blog' '/post/:slug'  %}
   {% include 'templates/blog/single.html' %}
-{% endif %}
+{% endget %}
 
-{% if router.get('blog', '/category') %}
+{% get 'blog' '/category' %}
   {% include 'templates/blog/category.html' %}
-{% endif %}
+{% endget %}
 
-{% if router.get('blog', '/category/:slug') %}
+{% get 'blog' '/category/:slug' %}
   {% include 'templates/blog/category.html' %}
-{% endif %}
+{% endget %}
 
-{% if router.get('blog', '/archive/:y/:m/:d') %}
+{% get 'blog' '/archive/:y/:m/:d' %}
   {% include 'templates/blog/archive.html' %}
-{% endif %}
+{% endget %}
 
-{% if router.get('page') %}
+{% get 'page' %}
   {% set page_template_path = 'templates/pages/' + current_page.meta.item_type.data.id + '.html' %}
   {% include page_template_path %}
-{% endif %}
+{% endget %}

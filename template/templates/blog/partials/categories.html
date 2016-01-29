@@ -1,0 +1,11 @@
+{% set category_path =    url + '/category/' %}
+
+<!-- Categories -->
+{% if categories.length %}
+<h1 class="title-block second-child">Kategorier</h1>
+<ul class="categories margin-bottom-30">
+  {% for category in categories %}
+    <li><a href="{{category_path}}{{category.attributes.slug}}">{{category.attributes.title}}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}

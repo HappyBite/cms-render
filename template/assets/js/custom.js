@@ -67,3 +67,13 @@ $('.rating .votedown').on('click', function () {
 
   ga('create', 'UA-4400411-10', 'auto');
   ga('send', 'pageview');
+
+// ========
+// BLOG 
+// ========
+
+/* ===== Blog popovers ===== */
+
+$(function(){
+    $('.author-preview').popover();
+});
