@@ -8,59 +8,42 @@ module.exports = {
   
   /**
    * Filter items
-   * Ex. query: type[]=page&type[]=blog-post
+   * Ex. query: type=blog-post&attributes.slug[eq]='bloggpost-1'
    * Todo: This should make a request to the API and cache it
-   * @param {array} items
-   * @param {array} query
+   * @param {object} query
+   * @return {array} items
    */
-  filterItems: function(items, query) {
-    // Cache this for better performance
+  filterItems: function(query) {
+    var items = cache.get('items');
+    if (!query) { return items; }
     var query = querystring.parse(query);
     var filteredItems = [];
-    var filteredItems1 = [];
-    var filterMore = false;
-    if(query['type[]'] || query['type']) {
-      query['type[]'] = typeof query['type[]'] === 'string' ? [query['type[]']] : query['type[]'];
-      query['type'] = typeof query['type'] === 'string' ? [query['type']] : query['type'];
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        if(query['type[]']) {
-          if(~query['type[]'].indexOf(item.meta.item_type.data.id)) {
-            filteredItems.push(item);
-          }
-        } else {
-          if(~query['type'].indexOf(item.meta.item_type.data.id)) {
-            filteredItems.push(item);
-          }  
-        }
-      }
-    }
+    var hasFilter = false;
     for (var q in query) {
       if(~q.indexOf('[eq]') || ~q.indexOf('[in]')) {
-        filterMore = true;
+        hasFilter = true;
         break;
       }
     }
-    if (filterMore) {
-      if (filteredItems.length) {
-        items = filteredItems;
-      }
+    if(query['type']) {
+      query['type'] = typeof query['type'] === 'string' ? [query['type']] : query['type'];
       for (var i = 0; i < items.length; i++) {
         var item = items[i];
-        for (var q in query) {
-          var qValue = query[q];
-          if(~q.indexOf('[eq]')) {
-            var qSplit = q.replace('[eq]', '').split('.');
-            if(item[qSplit[0]][qSplit[1]] === qValue) {
-              filteredItems1.push(item);
-            }  
+        if(~query['type'].indexOf(item.meta.item_type.data.id)) {
+          if (this._isItemIncluded(item, query, hasFilter)) {
+            filteredItems.push(item);
           }
+        }  
+      }
+    } else {
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        if (this._isItemIncluded(item, query, hasFilter)) {
+          filteredItems.push(item); 
         }
       }
-      return filteredItems1;  
-    } else {
-      return filteredItems;
     }
+    return filteredItems;
   },
 
   /**
@@ -70,13 +53,17 @@ module.exports = {
    * @param {array} items
    * @param {array} query
    */
-  filterMeta: function(metaItems, query) {
+  filterMeta: function(query) {
     // Cache this for better performance
-    var query = querystring.parse(query);
+    var meta = cache.get('meta');
+    var query = query ? querystring.parse(query) : null;
+    if (!query) {
+      return items;
+    }
     var filteredItems = [];
     if(query.id) {
-      for (var i = 0; i < metaItems.length; i++) {
-        var metaItem = metaItems[i];
+      for (var i = 0; i < meta.length; i++) {
+        var metaItem = meta[i];
         if(metaItem.id === query.id) {
           filteredItems.push(metaItem);
           break;
@@ -84,26 +71,6 @@ module.exports = {
       }
     }
     return filteredItems;
-  },
-
-  /**
-   * Filter meta item. Get meta by id.
-   * Ex. query: type[]=page&type[]=blog-post
-   * Todo: This should make a request to the API and cache it
-   * @param {array} items
-   * @param {string} id
-   */
-  filterMetaItem: function(metaItems, id) {
-    // Cache this for better performance
-    var item;
-    for (var i = 0; i < metaItems.length; i++) {
-      var metaItem = metaItems[i];
-      if(metaItem.id === id) {
-        item = metaItem;
-        break;
-      }
-    }
-    return item;
   },
 
   /**
@@ -203,5 +170,29 @@ module.exports = {
     // }
     //console.log(currentRoute.ids);
     return currentRoute;
+  },
+
+  /**
+   * Is item included
+   * @param {object} item
+   * @param {object} query
+   * @return {bool}
+   */
+  _isItemIncluded: function(item, query, hasFilter) {
+    var isItemIncluded = false;
+    if (hasFilter) {
+      for (var q in query) {
+        var qValue = query[q];
+        if(~q.indexOf('[eq]')) {
+          var qSplit = q.replace('[eq]', '').split('.');
+          if(item[qSplit[0]][qSplit[1]] === qValue) {
+            isItemIncluded = true;
+          }  
+        }
+      }
+    } else {
+      isItemIncluded = true;
+    }
+    return isItemIncluded;  
   }
 };

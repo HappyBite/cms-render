@@ -1,4 +1,5 @@
-{% set category_path =    url + '/category/' %}
+{% set categories = 'items' | resource('type=blog-post-category') %}
+{% set category_path = current_route.page_path + '/category/' %}
 
 <!-- Categories -->
 {% if categories.length %}

@@ -1,6 +1,5 @@
-{% set posts =      'items' | resource('type=blog-post') %}
-{% set categories = 'items' | resource('type=blog-post-category') %}
-{% set post_path =  url + '/post/' %}
+{% set posts = 'items' | resource('type=blog-post') %}
+{% set post_path = current_route.page_path + '/post/' %}
 
 <div class="row">
   <div class="col-sm-9">
@@ -30,8 +29,8 @@
         <p>
           {{post.summary}}
         </p>
-        <a class="btn btn-lg btn-red" href="post.html">Läs mer...</a>
-        <a href="post.html"><img class="img-responsive post-img" src="/assets/img/general-3.jpg" alt="..."></a>
+        <a class="btn btn-lg btn-red" href="{{post_path}}{{post.slug}}">Läs mer...</a>
+        <a href="{{post_path}}{{post.slug}}"><img class="img-responsive post-img" src="/assets/img/general-3.jpg" alt="..."></a>
       </div>
     </div>
     {% endfor %}

@@ -7,18 +7,6 @@ var querystring = require('querystring');
 var utils = require('./utils');  
  
 /**
- * Yields the media url for the requested media item
- * @param {string} id
- */
-swig.setFilter('asset_url', function (id) {
-  var assetDictionary = cache.get('asset_dictionary');
-  if(typeof assetDictionary[id] === 'undefined') {
-    return;
-  }
-  return assetDictionary[id].attributes.file.url;
-}); 
-
-/**
  * Yields an API resource
  * @example
  * {{ 'items' | resource('type=blog-post') }}
@@ -31,24 +19,23 @@ swig.setFilter('asset_url', function (id) {
 swig.setFilter('resource', function (resource, query) {
   var res;
   if (resource === 'items') {
-    res = cache.get('items');
-    if(query) {
-      res = utils.filterItems(res, query);
-    }
-  } else if (resource === 'item-types') {
-    res = cache.get('item_types');
+    res = utils.filterItems(query);
   } else if (resource === 'meta') {
-    res = cache.get('meta');
-    if(query) {
-      res = utils.filterMeta(res, query);
-    }
-  } else if (resource === 'meta_item') {
-    res = cache.get('meta');
-    if(query) {
-      res = utils.filterMetaItem(res, query);
-    }
+    res = utils.filterMeta(query);
   }
   return res;
+});
+
+/**
+ * Yields the media url for the requested media item
+ * @param {string} id
+ */
+swig.setFilter('asset_url', function (id) {
+  var assetDictionary = cache.get('asset_dictionary');
+  if(typeof assetDictionary[id] === 'undefined') {
+    return;
+  }
+  return assetDictionary[id].attributes.file.url;
 });
 
 /**
