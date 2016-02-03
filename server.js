@@ -23,9 +23,9 @@ app.set('views', __dirname + '/template');
 // that and use Express's caching instead, if you like:
 app.set('view cache', true);
 // To disable Swig's cache, do the following:   
-swig.setDefaults({ cache: false });
 // NOTE: You should always cache templates in a production environment.
 // Don't leave both of these to false in production!
+swig.setDefaults({ cache: false });
 
 app.set('port', (process.env.PORT || 5000));
 
