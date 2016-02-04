@@ -125,12 +125,15 @@ module.exports = function(app) {
   // Middleware
   app.use(function(req, res, next) {
     var url = req.url;
+    var query = req.query;
+    url = ~url.indexOf('?') ? url.split('?')[0] : url;
     var lastCharOnUrl = url.substring(url.length - 1, url.length);
     if(lastCharOnUrl === '/' && url !== '/') {
-      url = url.substring(0, url.length - 1) 
+      url = url.substring(0, url.length - 1);
     }
     var defaults = {
       url: url,
+      query: query
     };
     var model = {};
     swig.setDefaults({locals: defaults});

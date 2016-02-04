@@ -27,31 +27,6 @@ swig.setFilter('resource', function (resource, query) {
 });
 
 /**
- * Yields the media url for the requested media item
- * @param {string} id
- */
-swig.setFilter('asset_url', function (id) {
-  var assetDictionary = cache.get('asset_dictionary');
-  if(typeof assetDictionary[id] === 'undefined') {
-    return;
-  }
-  return assetDictionary[id].attributes.file.url;
-});
-
-/**
- * Yields the route that corresponds to the url
- * @example
- * {% set current_route = url | route %}
- * 
- * @param {string} url
- * 
- * @return {object} route
- */
-swig.setFilter('route', function (url) {
-  return utils.getCurrentRoute(url);
-});
-
-/**
  * Yields relationships for a property
  * @example
  * item.attributes.image | include
@@ -92,6 +67,31 @@ swig.setFilter('include', function (property) {
 });
 
 /**
+ * Yields the media url for the requested media item
+ * @param {string} id
+ */
+swig.setFilter('asset_url', function (id) {
+  var assetDictionary = cache.get('asset_dictionary');
+  if(typeof assetDictionary[id] === 'undefined') {
+    return;
+  }
+  return assetDictionary[id].attributes.file.url;
+});
+
+/**
+ * Yields the route that corresponds to the url
+ * @example
+ * {% set current_route = url | route %}
+ * 
+ * @param {string} url
+ * 
+ * @return {object} route
+ */
+swig.setFilter('route', function (url) {
+  return utils.getCurrentRoute(url);
+});
+
+/**
  * Get cache
  * @example
  * 'pages' | get_cache
@@ -129,17 +129,4 @@ swig.setFilter('set_cache', function (key, obj) {
 swig.setFilter('match', function (str, regExp) {
   //console.log(regExp)
   return str.match(new RegExp(regExp));
-});
-
-/**
- * Split string
- * @example
- * 'hello, herro' | split(',') %}
-
- * @param  {string} str
- * @param  {string} chars
- * @return {string} 
- */
-swig.setFilter('split', function (str, chars) {
-  return str.split(chars);
 });

@@ -1,9 +1,16 @@
-{% set posts = 'items' | resource('type=blog-post') %}
+{% set posts = 'items' | resource('type=blog-post&sort=attributes.slug') %}
 {% set post_path = current_route.page_path + '/post/' %}
+
+{# Set pagination variables #}
+{% set pageNumber = 1 %}
+{% set pageSize = 5 %}
+{% if query.page.number %}{% set pageNumber = parseInt(query.page.number) %}{% endif %}
+{% if query.page.size %}{% set pageSize = parseInt(query.page.size) %}{% endif %}
+{% set offset = pageSize * [pageNumber-1] %}
 
 <div class="row">
   <div class="col-sm-9">
-    {% for post in posts %}
+    {% for post in posts.slice(offset, [offset+pageSize]) %}
     {% set post  = post.attributes %}
     {% set image = post.relationships.image | include %}
     <!-- Blog Post #{{loop.index}} -->
@@ -30,21 +37,17 @@
           {{post.summary}}
         </p>
         <a class="btn btn-lg btn-red" href="{{post_path}}{{post.slug}}">Läs mer...</a>
-        <a href="{{post_path}}{{post.slug}}"><img class="img-responsive post-img" src="/assets/img/general-3.jpg" alt="..."></a>
+        {# <a href="{{post_path}}{{post.slug}}"><img class="img-responsive post-img" src="/assets/img/general-3.jpg" alt="..."></a> #}
+        <br /><br />
       </div>
     </div>
     {% endfor %}
-    <!-- Pagination -->
-    <ul class="pagination pull-right">
-      <li class="disabled"><a href="#">«</a></li>
-      <li class="active"><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">3</a></li>
-      <li><a href="#">4</a></li>
-      <li><a href="#">5</a></li>
-      <li><a href="#">»</a></li>
-    </ul>
-    <div class="clearfix"></div>
+    {#
+     # Include pagination navigation.
+     # The list to paginate has to be named item_list.
+     #}
+    {% set item_list = posts %}
+    {% include '../../partials/pagination.html' %}
   </div>
   
   <div class="col-sm-3">

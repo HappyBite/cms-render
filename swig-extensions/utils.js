@@ -19,6 +19,7 @@ module.exports = {
     var query = querystring.parse(query);
     var filteredItems = [];
     var hasFilter = false;
+
     for (var q in query) {
       if(~q.indexOf('[eq]') || ~q.indexOf('[in]')) {
         hasFilter = true;
@@ -42,6 +43,10 @@ module.exports = {
           filteredItems.push(item); 
         }
       }
+    }
+
+    if(query['sort']) {
+      filteredItems = this._sortItems(filteredItems, query['sort'])
     }
     return filteredItems;
   },
@@ -193,6 +198,52 @@ module.exports = {
     } else {
       isItemIncluded = true;
     }
-    return isItemIncluded;  
+    return isItemIncluded;
+  },
+
+  /**
+   * Sort items
+   * @param {object} items
+   * @param {object} query
+   * @return {array} items
+   */
+  _sortItems: function(items, sortQuery) {
+    var sortDesc = false;
+    if (sortQuery.substring(0, 1) === '-') {
+      sortDesc = true;
+      sortQuery = sortQuery.substring(1, sortQuery.length);
+    }
+    items = items.sort(function(a, b) {
+      var val1 = a[sortQuery];
+      var val2 = b[sortQuery];
+      if (~sortQuery.indexOf('.')) {
+        var sortQuerySplit = sortQuery.split('.');
+        val1 = a[sortQuerySplit[0]][sortQuerySplit[1]];
+        val2 = b[sortQuerySplit[0]][sortQuerySplit[1]];
+      }
+      val1 = typeof val1 !== 'undefined' ? val1 : '';
+      val2 = typeof val2 !== 'undefined' ? val2 : '';
+      var isDate = Date.parse(val1.toString().replace(/ /g, ''));
+      var isInt = !isNaN(val1);
+      if (sortDesc) {
+        if (isInt) {
+          return parseInt(val1)-parseInt(val2);
+        } else if (isDate) {
+          return new Date(val2)-new Date(val1);  
+        } else {
+          return val2.localeCompare(val1);
+        }
+      } else {
+        if (isInt) {
+          return parseInt(val2)-parseInt(val1);
+        } else if (isDate) {
+          return new Date(val1)-new Date(val2);
+        } else {
+          return val1.localeCompare(val2);
+          //return val1-val2;
+        }
+      }
+    });
+    return items;  
   }
 };

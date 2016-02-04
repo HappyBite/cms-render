@@ -3,6 +3,7 @@ var app = express();
 var path = require('path');
 var compression = require('compression');
 var swig = require('swig');
+var swigExtras = require('swig-extras');
 var dotenv = require('dotenv').load();
 var filters = require('./swig-extensions/filters.js');
 var tags = require('./swig-extensions/tags.js');
@@ -15,6 +16,7 @@ nconf.add('system', {type: 'file', file: 'dummy: has to be here for get set to w
 
 // This is where all the magic happens!
 app.engine('html', swig.renderFile);
+swigExtras.useFilter(swig, 'markdown');
 
 app.set('view engine', 'html');
 app.set('views', __dirname + '/template');

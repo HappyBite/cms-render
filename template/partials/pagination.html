@@ -1,0 +1,39 @@
+{# Set pagination variables #}
+{# {% set pageNumber = 1 %}
+{% set pageSize = 10 %}
+{% if query.page.number %}{% set pageNumber = parseInt(query.page.number) %}{% endif %}
+{% if query.page.size %}{% set pageSize = parseInt(query.page.size) %}{% endif %} #}
+{% set pageSizeCount = pageSize * [pageNumber-1] %}
+{% set pageSizeIndex = 0 %}
+{% set pageCount = 1 %}
+
+{% set prev_link = '#' %}
+{% if query.page.number and query.page.number > 1 %}
+  {% set prev_link = '?page[number]=' + [pageNumber-1] + '&page[size]=' + pageSize %}
+{% endif %}
+
+{% set next_link = '#' %}
+{% set pageSizeCountPlusPageSize = pageSizeCount + pageSize %}
+{% if pageSizeCountPlusPageSize < item_list.length %}
+  {% set next_link = '?page[number]=' + [pageNumber+1] + '&page[size]=' + pageSize %}
+{% endif %}
+
+<!-- Pagination -->
+<ul class="pagination pull-right">
+  <li{% if prev_link === '#' %} class="disabled"{% endif %}>
+    <a href="{{prev_link}}">«</a>
+  </li>
+  {% for item in item_list %}
+    {% if loop.index0 === pageSizeIndex %}
+      <li{% if pageSizeIndex === pageSizeCount %} class="active"{% endif %}>
+        <a href="?page[number]={{pageCount}}&page[size]={{pageSize}}">{{pageCount}}</a>
+      </li>
+      {% set pageCount = pageCount + 1 %}
+      {% set pageSizeIndex = pageSizeIndex + pageSize %}
+    {% endif %}
+  {% endfor %}
+  <li{% if next_link === '#' %} class="disabled"{% endif %}>
+    <a href="{{next_link}}">»</a>
+  </li>
+</ul>
+<div class="clearfix"></div>

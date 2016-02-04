@@ -34,7 +34,7 @@
           {% set res = matcher[0] %}
           {% if res === url %}
             {% if route.path %}
-              {% set route_path_split = route.path | split('/:') %}
+              {% set route_path_split = route.path.split('/:') %}
               {% for m in matcher %}
                 {% if loop.index0 > 0 %}
                   {% set expr = route_path_split[loop.index0] %}
@@ -64,7 +64,7 @@
           {% set res = matcher[0] %}
           {% if res === _url %}
             {% if route.path %}
-              {% set route_path_split = route.path | split('/:') %}
+              {% set route_path_split = route.path.split('/:') %}
               {% for m in matcher %}
                 {% if loop.index0 > 0 %}
                   {% set expr = route_path_split[loop.index0] %}
