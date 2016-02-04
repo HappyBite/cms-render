@@ -1,0 +1,42 @@
+{% import '../../../partials/pagination.html' as pagination %}
+{% if Object.keys(current_route.ids).length %}
+  {% set posts = 'items' | resource('type=blog-post&sort=-meta.created_at') %}
+{% else %}
+  {% set posts = 'items' | resource('type=blog-post&sort=-meta.created_at') %}
+{% endif %}
+{% set post_path = current_route.page_path + '/post/' %}
+{% set pagination_nav = pagination.init(posts, 10) %}
+
+{% for post in paginate.items %}
+  {% set post  = post.attributes %}
+  {% set image = post.relationships.image | include %}
+  <!-- Blog Post #{{loop.index}} -->
+  <div class="post">
+    <img src="/assets/img/photo-1.jpg" alt="...">
+    <div class="post-desc">
+      <h3 class="post-title">
+        <a href="{{post_path}}{{post.slug}}">{{post.title}}</a>
+      </h3>
+      <hr>
+      <p class="text-muted">
+        by
+        <a href="#"
+          class="author-preview"
+          data-toggle="popover"
+          data-placement="right"
+          data-trigger="hover"
+          data-content="Pellentesque nulla leo, laoreet sed luctus eu, dapibus id lorem. Pellentesque eu tincidunt odio."
+          data-original-title="John Doe">John Doe
+        </a>
+        on March 25, 2014
+      </p>
+      <p>
+        {{post.summary}}
+      </p>
+      <a class="btn btn-lg btn-red" href="{{post_path}}{{post.slug}}">Läs mer...</a>
+      {# <a href="{{post_path}}{{post.slug}}"><img class="img-responsive post-img" src="/assets/img/general-3.jpg" alt="..."></a> #}
+      <br /><br />
+    </div>
+  </div>
+{% endfor %}
+{{ pagination_nav | raw }}

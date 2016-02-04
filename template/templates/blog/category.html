@@ -1,19 +1,12 @@
-{% set categories = 'items' | resource('type=blog-post-category') %}
 {% set config = 'meta_item' | resource('config') %}
 
-{% if current_route.ids.slug %}
-<h1 class="title-lg"><span>Blog - Category</span></h1>
-  en kategori
-{% else %}
-<h1 class="title-lg"><span>Blog - Categories</span></h1>
-  <h2>
-    <a href="{{url}}">Categories</a>
-  </h2>
-  <ul class="nav">
-    {% for category in categories %}
-      <li>
-        <a href="{{category.attributes.slug}}">{{category.attributes.title}}</a>
-      </li>
-    {% endfor %}
-  </ul>
-{% endif %}
+<div class="row">
+  <div class="col-sm-9">
+    {% include 'partials/posts.html' %}
+  </div>
+  <div class="col-sm-3">
+    {% include 'partials/categories.html' %}
+    {% include 'partials/top-stories.html' %}
+    {% include 'partials/tweets.html' %}
+  </div>
+</div>

@@ -6,7 +6,10 @@
 <h1 class="title-block second-child">Kategorier</h1>
 <ul class="categories margin-bottom-30">
   {% for category in categories %}
-    <li><a href="{{category_path}}{{category.attributes.slug}}">{{category.attributes.title}}</a></li>
+    {% set category_url = category_path + category.attributes.slug %}
+    <li{% if url === category_url %} class="active"{% endif %}>
+      <a href="{{category_url}}">{{category.attributes.title}}</a>
+    </li>
   {% endfor %}
 </ul>
 {% endif %}
