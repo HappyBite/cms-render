@@ -43,13 +43,17 @@ module.exports = {
    * @param {array} items
    * @param {array} query
    */
-  filterMeta: function(metaItems, query) {
+  filterMeta: function(query) {
     // Cache this for better performance
-    var query = querystring.parse(query);
+    var meta = cache.get('meta');
+    var query = query ? querystring.parse(query) : null;
+    if (!query) {
+      return items;
+    }
     var filteredItems = [];
     if(query.id) {
-      for (var i = 0; i < metaItems.length; i++) {
-        var metaItem = metaItems[i];
+      for (var i = 0; i < meta.length; i++) {
+        var metaItem = meta[i];
         if(metaItem.id === query.id) {
           filteredItems.push(metaItem);
           break;
@@ -94,28 +98,25 @@ module.exports = {
     var route_ids = {};
     
     if (customRoute) {
-      var pageRoutes = cache.get('routes');
+      var pageRoutes = cache.get('page_routes');
       for (var pageRouteKey in pageRoutes) {
         var listRoutePath = customRoute.path.replace(/:/g, '~');
         listRoutePath = listRoutePath !== '/' ? listRoutePath : '';
-        //if(!routes[pageRouteKey + listRoutePath]) {
-          var pageRoute = pageRoutes[pageRouteKey]; 
-          if (pageRoute.meta.item_type.data.id === customRoute.item_type) {
-            var addObject = {
-              type: 'collection',
-              item_type: pageRoute.meta.item_type.data.id,
-              path: customRoute.path,
-              full_path: pageRouteKey + (customRoute.path !== '/' ? customRoute.path : ''),
-              page_path: pageRoute.attributes.path
-              //template: 'none'
-            };
-            routes[pageRouteKey + listRoutePath] = addObject;
-            cache.set('routes', routes);
-            // console.log(pageRouteKey + listRoutePath);
-            // console.log(routes[pageRouteKey + listRoutePath]);
-          }
-        //}
+        var pageRoute = pageRoutes[pageRouteKey];
+        if (pageRoute.item_type === customRoute.item_type) {
+          var addObject = {
+            type: 'collection',
+            item_type: pageRoute.item_type,
+            //path: customRoute.path,
+            path: pageRouteKey + (customRoute.path !== '/' ? customRoute.path : ''),
+            page_path: pageRoute.path
+            //template: 'none'
+          };
+          routes[pageRouteKey + listRoutePath] = addObject;
+          //console.log(routes[pageRouteKey + listRoutePath]);
+        }
       }
+      cache.set('routes', routes);
     }
 
     //if (!currentRoute || customRoute) {
@@ -128,17 +129,18 @@ module.exports = {
         var route = routes[routeKey];
         // console.log(routeKey);
         // console.log(route);
-        if (route.full_path) {
-          var routeMatcher = new RegExp(route.full_path.replace(/:[^\s/]+/g, '([\\w-]+)'));
+        if (route.path) {
+          //var routeMatcher = new RegExp(route.path.replace(/:[^\s/]+/g, '([\\w-]+)'));
+          var routeMatcher = route.path.replace(/:[^\s/]+/g, '([\\w-]+)');
           var matcher = url.match(routeMatcher);
           if(matcher) { 
             res = matcher[0];
             if(res === url) { 
               // console.log('Test: ' + routeMatcher.test(url));
               // console.log('Found match: ' + res);
-              // console.log(route.full_path);
-              if (route.full_path) {
-                var routePathSplit = route.full_path.split('/:');
+              // console.log(route.path);
+              if (route.path) {
+                var routePathSplit = route.path.split('/:');
                 for (var i = 0; i < matcher.length; i++) {
                   if (i > 0) {  
                     //console.log(routePathSplit[i] + ': ' + matcher[i]);
@@ -155,11 +157,11 @@ module.exports = {
     //}
     if (currentRoute) {
       currentRoute.ids = route_ids;
-      currentRoute.url = currentRoute.full_path;
+      //currentRoute.url = currentRoute.path;
       if(Object.keys(currentRoute.ids).length) {
         for (var key in currentRoute.ids) {
           var id = currentRoute.ids[key];
-          currentRoute.url = currentRoute.url.replace(':' + key, id);
+          //currentRoute.url = currentRoute.url.replace(':' + key, id);
         }
       }
       // var pageRoutes = cache.get('page_routes');
@@ -171,7 +173,7 @@ module.exports = {
     //     type: '',
     //     item_type: '',
     //     path: '',
-    //     full_path: '',
+    //     path: '',
     //     template: '',
     //     ids: null
     //   }

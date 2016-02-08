@@ -11,7 +11,7 @@
 {% set items = 'items' | resource %}
 
 {#
- # Create page dictionary from item type "nav-menu-item" and cache it.
+ # Create a page dictionary from item type "nav-menu-item" and cache it.
  # This is a default item type and you can use this for the navigation
  # and also for getting the current_page etc.
  #}
@@ -26,8 +26,8 @@
       {% set page['attributes']['display_name'] = item.attributes.display_name %}
       {% set page['attributes']['start_page'] = item.attributes.start_page %}
       {% set page['meta']['position'] = item.meta.position %}
-      {% set page_attributes_slug = '/' + page.attributes.slug %}
-      {% set pages[page_attributes_slug] = page %}
+      {# {% set page_attributes_slug = '/' + page.attributes.slug %} #}
+      {% set pages[page.attributes.path] = page %}
       {% if item.meta.item_type.data.id === 'nav-menu-item' && item.attributes.start_page %}
         {% set pages['/'] = page %}
       {% endif %}
@@ -36,9 +36,13 @@
   {{ 'pages' | set_cache(pages) }}
 {% endif %}
 
+{# The macro router.get generates the object variable: current_route #}
+{{ router.get('', '', url) }}
 {% set start_page = pages['/'] %}
 {% set current_page = pages[url] %}
-{# It generates the object variable: current_route #}
-{{ router.get('', '', url) }}
+{# Set current collection page as current page if in a collection page #}
+{% if current_route %}
+  {% set current_page = 'items' | resource('id[eq]=' + current_route.page_id) | first %}
+{% endif %}
 
 {% block layout %}{% endblock %}

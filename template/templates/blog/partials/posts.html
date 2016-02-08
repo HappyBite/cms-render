@@ -1,21 +1,26 @@
-{% import '../../../partials/pagination.html' as pagination %}
+{% import '../../../partials/macros/pagination.html' as pagination %}
+{% import '../../../partials/macros/helper.html' as helper %}
+
 {% if Object.keys(current_route.ids).length %}
-  {% set posts = 'items' | resource('type=blog-post&sort=-meta.created_at') %}
+  {% set current_category = 'items' | resource('type=blog-post-category&attributes.slug[eq]=' + current_route.ids.slug) | first %}
+  {{ helper.set_term_items('blog-post', 'categories', current_category.id) }}
+  {% set posts = term_items %}
+  {# {% set posts = 'items' | resource('type=blog-post&relationships.categories.data[elemMatch]=[id="' + current_category.id + '"]&sort=-meta.created_at') %} #}
 {% else %}
   {% set posts = 'items' | resource('type=blog-post&sort=-meta.created_at') %}
 {% endif %}
-{% set post_path = current_route.page_path + '/post/' %}
 {% set pagination_nav = pagination.init(posts, 10) %}
 
 {% for post in paginate.items %}
   {% set post  = post.attributes %}
   {% set image = post.relationships.image | include %}
+  {% set post_path = current_page.attributes.path + '/post/' + post.slug %}
   <!-- Blog Post #{{loop.index}} -->
   <div class="post">
     <img src="/assets/img/photo-1.jpg" alt="...">
     <div class="post-desc">
       <h3 class="post-title">
-        <a href="{{post_path}}{{post.slug}}">{{post.title}}</a>
+        <a href="{{post_path}}">{{post.title}}</a>
       </h3>
       <hr>
       <p class="text-muted">
@@ -33,8 +38,8 @@
       <p>
         {{post.summary}}
       </p>
-      <a class="btn btn-lg btn-red" href="{{post_path}}{{post.slug}}">Läs mer...</a>
-      {# <a href="{{post_path}}{{post.slug}}"><img class="img-responsive post-img" src="/assets/img/general-3.jpg" alt="..."></a> #}
+      <a class="btn btn-lg btn-red" href="{{post_path}}">Läs mer...</a>
+      {# <a href="{{post_path}}"><img class="img-responsive post-img" src="/assets/img/general-3.jpg" alt="..."></a> #}
       <br /><br />
     </div>
   </div>

@@ -29,7 +29,7 @@
   {% endif %}
 
   <!-- Pagination -->
-  {% if page_size && items.length > pageSize %}
+  {% if pageSize && items.length > pageSize %}
     <ul class="pagination pull-right">
       <li{% if prev_link === '#' %} class="disabled"{% endif %}>
         <a href="{{prev_link}}">«</a>

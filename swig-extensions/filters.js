@@ -22,6 +22,11 @@ swig.setFilter('resource', function (resource, query) {
     res = utils.filterItems(query);
   } else if (resource === 'meta') {
     res = utils.filterMeta(query);
+  } else {
+    query = query ?
+            query + '&type=' + resource :
+            'type=' + resource;
+    res = utils.filterItems(query);
   }
   return res;
 });
@@ -79,19 +84,6 @@ swig.setFilter('asset_url', function (id) {
 });
 
 /**
- * Yields the route that corresponds to the url
- * @example
- * {% set current_route = url | route %}
- * 
- * @param {string} url
- * 
- * @return {object} route
- */
-swig.setFilter('route', function (url) {
-  return utils.getCurrentRoute(url);
-});
-
-/**
  * Get cache
  * @example
  * 'pages' | get_cache
@@ -115,18 +107,4 @@ swig.setFilter('get_cache', function (key) {
 swig.setFilter('set_cache', function (key, obj) {
   cache.set('swig-' + key, obj);
   return '';
-});
-
-/**
- * Regular expression match
- * @example
- * 'hello' | match('hello') %}
-
- * @param  {string} str
- * @param  {string} str
- * @return {string} 
- */
-swig.setFilter('match', function (str, regExp) {
-  //console.log(regExp)
-  return str.match(new RegExp(regExp));
 });

@@ -2,7 +2,7 @@
   {% for page in pages %}
     {% if loop.key !== '/' %}
       {% set is_active = false %}
-      {% if page.attributes.path === url || page.attributes.path === current_route.page_path %}
+      {% if page.attributes.path === url || page.id === current_route.page_id %}
         {% set is_active = true %}
       {% endif %}
       {% if url === '/' && page.id === start_page.id %}

@@ -1,3 +1,10 @@
+{#
+ # Router.html is a macro for handling routing.
+ # It works as the router for your website.
+ # Routes.html uses this macro to get the correct route.
+ # It generates the following object variables:
+ #  - current_route => Use this object to get the id/ids for the current route
+ #}
 {% macro get(item_type, path, _url) %}{% spaceless %}
   {% if !_url %}
     {% set global_routes = 'routes' | get_cache %}
@@ -19,7 +26,8 @@
         {% set add_object['type'] = 'collection' %}
         {% set add_object['item_type'] = item_type %}
         {% set add_object['path'] = loop.key + fixed_path %}
-        {% set add_object['page_path'] = page.attributes.path %}
+        {# {% set add_object['page_path'] = page.attributes.path %} #}
+        {% set add_object['page_id'] = page.id %}
         {% set global_routes[route_path_key] = add_object %}
         {% set routes[route_path_key] = add_object %}
       {% endif %}
@@ -29,7 +37,7 @@
     {% for route in routes %}
       {% if route.path %}
         {% set route_matcher = route.path | replace('\:[^\s/]+', '([\w-]+)', 'g') %}
-        {% set matcher = url | match(route_matcher) %}
+        {% set matcher = url.match(route_matcher) %}
         {% if matcher %}
           {% set res = matcher[0] %}
           {% if res === url %}
@@ -59,7 +67,7 @@
     {% for route in routes %}
       {% if route.path %}
         {% set route_matcher = route.path | replace('\:[^\s/]+', '([\w-]+)', 'g') %}
-        {% set matcher = _url | match(route_matcher) %}
+        {% set matcher = _url.match(route_matcher) %}
         {% if matcher %}
           {% set res = matcher[0] %}
           {% if res === _url %}

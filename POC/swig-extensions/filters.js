@@ -96,3 +96,17 @@ swig.setFilter('include', function (property) {
   }
   return relations;
 });
+
+/**
+ * Regular expression match
+ * @example
+ * 'hello' | match('hello') %}
+
+ * @param  {string} str
+ * @param  {string} str
+ * @return {string} 
+ */
+swig.setFilter('match', function (str, regExp) {
+  //console.log(regExp)
+  return str.match(new RegExp(regExp));
+});
