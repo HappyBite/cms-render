@@ -1,6 +1,9 @@
 {
   "name": "cms-render",
   "version": "0.0.1",
+  "engines": {
+    "node": "4.2.1"
+  },
   "main": "server.js",
   "repository": {
     "type": "git",
