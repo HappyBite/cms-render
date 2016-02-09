@@ -1,6 +1,6 @@
 {% set post = 'items' | resource('type=blog-post&attributes.slug[eq]=' + current_route.ids.slug) | first %}
+{% set image = post.relationships.image | include %}
 {% set post = post.attributes %}
-
 <div class="row">
   <div class="col-sm-9">
     <div class="post">
@@ -25,7 +25,7 @@
         <p>
           {{post.summary}}
         </p>
-        <img class="img-responsive post-img" src="/assets/img/general-3.jpg" alt="...">
+        <img class="img-responsive post-img" src="{{ image.attributes.file.url }}" alt="...">
         {{post.body | markdown}}
       </div>
     </div>
