@@ -137,7 +137,10 @@ module.exports = function(app) {
     };
     var model = {};
     swig.setDefaults({locals: defaults});
-    if (!~url.indexOf('.')) {
+    if (~url.indexOf('/github/events')) {
+      conf.clear('items');
+      res.send('Github webhook was executed successfully!!!');
+    } else if (!~url.indexOf('.')) {
       // It's in seconds. This will be cached for 1 minute.
       //res.header('Cache-Control', 'max-age=60, must-revalidate');
       
@@ -145,8 +148,9 @@ module.exports = function(app) {
       if (firstLoad) {
         swig.renderFile('template/index.html', model);
       }
-      return res.render('index', model);
+      res.render('index', model);
+    } else {
+      next();
     }
-    next();
   });
 };
