@@ -6,7 +6,6 @@ var swig = require('swig');
 var swigExtras = require('swig-extras');
 var dotenv = require('dotenv').load();
 var filters = require('./swig-extensions/filters.js');
-var tags = require('./swig-extensions/tags.js');
 var loadApplication = require('./load-application.js');
 
 // set config 

@@ -4,7 +4,7 @@ var sync = require('sync');
 var client = require('../cms-client.js'); 
 var cache = require('nconf');   
 var querystring = require('querystring');  
-var utils = require('./utils');  
+var utils = require('./utils');
  
 /**
  * Yields an API resource
