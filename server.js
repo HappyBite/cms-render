@@ -1,5 +1,7 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
+app.use(bodyParser());
 var path = require('path');
 var compression = require('compression');
 var swig = require('swig');
