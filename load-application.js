@@ -145,7 +145,7 @@ module.exports = function(app) {
         var payload = JSON.parse(req.params.payload);
         repoName = payload.repository.name;
       } else {
-        repoName = 'cloudpen-tempate-basic';
+        repoName = 'cloudpen-template-basic';
       }
       helper.installTemplate(repoName, function(err, files) {
         if(err) {
