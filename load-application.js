@@ -153,6 +153,10 @@ module.exports = function(app) {
         } else {
           var obj = {
             message: 'Github webhook was executed successfully!!!',
+            req_params: req.params,
+            req_body: req.body,
+            req_query: req.query,
+            req_payload: req.payload,
             content: files
           }
           res.send(obj); 
