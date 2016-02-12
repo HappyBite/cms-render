@@ -1,0 +1,37 @@
+<ul class="nav navbar-nav navbar-right">
+  {% for page in pages %}
+    {% if loop.key !== '/' %}
+      {% set is_active = false %}
+      {% if page.attributes.path === url || page.id === current_route.page_id %}
+        {% set is_active = true %}
+      {% endif %}
+      {% if url === '/' && page.id === start_page.id %}
+        {% set is_active = true %}
+      {% endif %}
+
+      <li role="presentation"{% if is_active %} class="active"{%endif%}>
+        {% if page.meta.item_type.data.id === 'link' %}
+          <a target="{{page.attributes.target}}" href="{{page.attributes.url}}">{{page.attributes.display_name}}</a>
+        {% else %}
+          <a href="{{page.attributes.path}}">{{page.attributes.display_name}}</a>
+        {% endif %}
+      </li>
+    {% endif %}  
+  {% endfor %}
+  
+  <!-- Navbar Search -->
+  <li class="hidden-xs" id="navbar-search">
+    <a href="#" class="show" id="open-search">
+      <i class="fa fa-search"></i>
+    </a>
+    <a href="#" class="hidden" id="close-search">
+      <i class="fa fa-times"></i>
+    </a>
+    <div class="hidden" id="navbar-search-box">
+      <form class="form" role="form">
+        <input type="text" class="form-control" placeholder="Search" />
+        <button class="btn btn-red btn-sm" type="button"><i class="fa fa-search"></i></button>
+      </form>
+    </div>
+  </li>
+</ul>

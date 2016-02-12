@@ -1,0 +1,21 @@
+{#
+ # Data.html contains global variables and custom model objects.
+ # It works as the data factory for your website.
+ # Change as you please : )
+ # It generates the following object variables:
+ #  - items         => Gives you all items
+ #  - pages         => Use this for the navigation and look up pages
+ #  - current_page  => Always gives you the current page object
+ #  - current_route => Always gives you the current route object
+ #  - start_page    => Always gives you the start page
+ #}
+{% extends 'partials/logic/data.html' %}
+
+{#
+ # You can build your architecture in any way you please.
+ # This is just one way of doing it.
+ # Change as you please : )
+ #}
+{% block layout %}
+  {% include 'layouts/default.html' %}
+{% endblock %}

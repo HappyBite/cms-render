@@ -1,0 +1,38 @@
+{% set post = 'items' | resource('type=blog-post&attributes.slug[eq]=' + current_route.ids.slug) | first %}
+{% set image = post.relationships.image | include %}
+{% set post = post.attributes %}
+<div class="row">
+  <div class="col-sm-9">
+    <div class="post">
+      <img src="/assets/img/photo-1.jpg" alt="...">
+      <div class="post-desc">
+        <h3 class="post-title">
+          {{post.title}}
+        </h3>
+        <hr>
+        <p class="text-muted">
+          by
+          <a href="#"
+            class="author-preview"
+            data-toggle="popover"
+            data-placement="right"
+            data-trigger="hover"
+            data-content="Pellentesque nulla leo, laoreet sed luctus eu, dapibus id lorem. Pellentesque eu tincidunt odio."
+            data-original-title="John Doe">John Doe
+          </a>
+          on March 25, 2014
+        </p>
+        <p>
+          {{post.summary}}
+        </p>
+        <img class="img-responsive post-img" src="{{ image.attributes.file.url }}" alt="...">
+        {{post.body | markdown}}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    {% include 'partials/categories.html' %}
+    {% include 'partials/top-stories.html' %}
+    {% include 'partials/tweets.html' %}
+  </div>
+</div>

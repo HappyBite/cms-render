@@ -1,6 +1,7 @@
 var swig = require('swig');
 var async = require('async');
-var client = require('./cms-client.js'); 
+var client = require('./cms-client.js');
+var helper = require('./lib/helper');
 var conf = require('nconf');
   
 module.exports = function(app) {    
@@ -59,7 +60,7 @@ module.exports = function(app) {
         var pageRoutes = {};
         var startPage;
         var startPageId;
-        if(typeof items === 'undefined') { 
+        if(typeof items === 'undefined') {
           console.log('Failed connection to the API');
           res.send('Failed connection to the API');
           return false;
@@ -139,7 +140,18 @@ module.exports = function(app) {
     swig.setDefaults({locals: defaults});
     if (~url.indexOf('/github/events')) {
       conf.clear('items');
-      res.send('Github webhook was executed successfully!!!');
+      var payload = JSON.parse(req.body.payload);
+      helper.installTemplate(payload.repository.name, function(err, files) {
+        if(err) {
+          res.send(err);
+        } else {
+          var obj = {
+            message: 'Github webhook was executed successfully!!!',
+            content: files
+          }
+          res.send(obj); 
+        }
+      });
     } else if (!~url.indexOf('.')) {
       // It's in seconds. This will be cached for 1 minute.
       //res.header('Cache-Control', 'max-age=60, must-revalidate');

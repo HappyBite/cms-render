@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charSet="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <title>{{current_page.attributes.title}}</title>
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/default.css" />
+    <link rel="stylesheet" href="/assets/fonts/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/assets/css/animate.css" />
+    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' type='text/css' />
+  </head>
+  <body>
+    <!-- header -->
+    {% include '../partials/header.html' %}
+    <div class="wrapper">
+      <!-- Topic Header -->
+      {% include '../partials/topic-header.html' %}
+      {% if current_page.attributes.start_page !== true %}
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+      {% endif %}
+        {% include '../routes.html' %}
+      {% if current_page.attributes.start_page !== true %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <!-- Footer -->
+    {% include '../partials/footer.html' %}
+  
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/scrolltopcontrol.js"></script>
+    <script src="/assets/js/custom.js"></script>
+    <script src="/assets/js/index.js"></script>
+  </body>
+</html>

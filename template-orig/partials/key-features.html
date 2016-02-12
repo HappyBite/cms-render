@@ -1,0 +1,21 @@
+{% set title = current_page.attributes.features_title %}
+{% set features = current_page.attributes.features %}
+
+<!-- Key Features -->
+<div class="row">
+  <div class="col-sm-12">
+    <h1 class="title-lg"><span>{{title}}</span></h1>
+  </div>
+</div>
+<div class="row features-block">
+  {% for feature in features %}
+    <div class="col-md-4 col-sm-6">
+      <div class="feature">
+        <h3><i class="fa fa-{{feature.icon}}"></i> {{feature.heading}}</h3>
+        <p>
+          {{feature.text}}
+        </p>
+      </div>
+    </div>
+  {% endfor %}
+</div>

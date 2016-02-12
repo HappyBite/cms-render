@@ -1,0 +1,94 @@
+{#
+ # Router.html is a macro for handling routing.
+ # It works as the router for your website.
+ # Routes.html uses this macro to get the correct route.
+ # It generates the following object variables:
+ #  - current_route => Use this object to get the id/ids for the current route
+ #}
+{% macro get(item_type, path, _url) %}{% spaceless %}
+  {% if !_url %}
+    {% set global_routes = 'routes' | get_cache %}
+    {% if !global_routes %}
+      {% set global_routes = {} %}
+    {% endif %}
+    {% set routes = {} %}
+    {% set route_ids = {} %}
+    {% for page in pages %}
+      {% set route_path_key = path | replace(':', '~', 'g') %}
+      {% if route_path_key === '/' %}
+        {% set route_path_key = '' %}
+      {% endif %}
+      {% set route_path_key = loop.key + route_path_key %}
+      {% if page.meta.item_type.data.id === item_type %}
+        {% set add_object = {} %}
+        {% set fixed_path = path %}
+        {% if fixed_path === '/' %}{% set fixed_path = '' %}{% endif %}
+        {% set add_object['type'] = 'collection' %}
+        {% set add_object['item_type'] = item_type %}
+        {% set add_object['path'] = loop.key + fixed_path %}
+        {# {% set add_object['page_path'] = page.attributes.path %} #}
+        {% set add_object['page_id'] = page.id %}
+        {% set global_routes[route_path_key] = add_object %}
+        {% set routes[route_path_key] = add_object %}
+      {% endif %}
+    {% endfor %}
+    {{ 'routes' | set_cache(global_routes) }}
+
+    {% for route in routes %}
+      {% if route.path %}
+        {% set route_matcher = route.path | replace('\:[^\s/]+', '([\w-]+)', 'g') %}
+        {% set matcher = url.match(route_matcher) %}
+        {% if matcher %}
+          {% set res = matcher[0] %}
+          {% if res === url %}
+            {% if route.path %}
+              {% set route_path_split = route.path.split('/:') %}
+              {% for m in matcher %}
+                {% if loop.index0 > 0 %}
+                  {% set expr = route_path_split[loop.index0] %}
+                  {# {% set route[expr] = matcher[loop.index0] %} #}
+                  {% set route_ids[expr] = matcher[loop.index0] %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+            true
+            {% set current_route = route %}
+            {% set current_route['ids'] = route_ids %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    {% if item_type === 'page' && !current_route %}
+      true
+    {% endif %}
+  {% else %}
+    {% set routes = 'routes' | get_cache %}
+    {% set route_ids = {} %}
+    {% for route in routes %}
+      {% if route.path %}
+        {% set route_matcher = route.path | replace('\:[^\s/]+', '([\w-]+)', 'g') %}
+        {% set matcher = _url.match(route_matcher) %}
+        {% if matcher %}
+          {% set res = matcher[0] %}
+          {% if res === _url %}
+            {% if route.path %}
+              {% set route_path_split = route.path.split('/:') %}
+              {% for m in matcher %}
+                {% if loop.index0 > 0 %}
+                  {% set expr = route_path_split[loop.index0] %}
+                  {# {% set route[expr] = matcher[loop.index0] %} #}
+                  {% set route_ids[expr] = matcher[loop.index0] %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+            {% set current_route = route %}
+            {% set current_route['ids'] = route_ids %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    {% if item_type === 'page' && !current_route %}
+      true
+    {% endif %}
+  {% endif %}
+{% endspaceless %}{% endmacro %}
