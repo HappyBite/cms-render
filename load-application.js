@@ -140,8 +140,14 @@ module.exports = function(app) {
     swig.setDefaults({locals: defaults});
     if (~url.indexOf('/github/events')) {
       conf.clear('items');
-      var payload = JSON.parse(req.body.payload);
-      helper.installTemplate(payload.repository.name, function(err, files) {
+      var repoName;
+      if (req.params && req.params.payload) {
+        var payload = JSON.parse(req.params.payload);
+        repoName = payload.repository.name;
+      } else {
+        repoName = 'cloudpen-tempate-basic';
+      }
+      helper.installTemplate(repoName, function(err, files) {
         if(err) {
           res.send(err);
         } else {
