@@ -141,8 +141,8 @@ module.exports = function(app) {
     if (~url.indexOf('/github/events')) {
       conf.clear('items');
       var repoName;
-      if (req.params && req.params.payload) {
-        var payload = JSON.parse(req.params.payload);
+      if (req.body && req.body.payload) {
+        var payload = JSON.parse(req.body.payload);
         repoName = payload.repository.name;
       } else {
         repoName = 'cloudpen-template-basic';
