@@ -3,6 +3,7 @@ var async = require('async');
 var client = require('./cms-client.js');
 var helper = require('./lib/helper');
 var conf = require('nconf');
+var fs = require('fs');
   
 module.exports = function(app) {    
   
@@ -138,8 +139,11 @@ module.exports = function(app) {
     };
     var model = {};
     swig.setDefaults({locals: defaults});
-    if (~url.indexOf('/github/events')) {
-      conf.clear('items');
+    var templateDirExist = fs.existsSync('template');
+    if (~url.indexOf('/github/events') || !templateDirExist) {
+      if (templateDirExist) {
+        conf.clear('items');
+      }
       var repoName;
       if (req.body && req.body.payload) {
         var payload = JSON.parse(req.body.payload);
@@ -159,7 +163,11 @@ module.exports = function(app) {
             req_payload: req.payload,
             content: files
           }
-          res.send(obj); 
+          if (!templateDirExist) {
+            res.redirect('/');
+          } else {
+            res.send(obj);   
+          }
         }
       });
     } else if (!~url.indexOf('.')) {
