@@ -151,7 +151,7 @@ module.exports = function(app) {
     swig.setDefaults({locals: defaults});
     var templateDirExist = fs.existsSync('template');
     if (~url.indexOf('/github/events') || !templateDirExist) {
-      var template = conf.get('store_meta_dictionary').template;
+      var template = 'cloudpen-template-' + conf.get('store_meta_dictionary').template;
       var templateCustom = conf.get('store_meta_dictionary').template_custom;
       if (templateDirExist) {
         conf.clear('items');
