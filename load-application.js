@@ -175,7 +175,8 @@ module.exports = function(app) {
             req_body: req.body,
             req_query: req.query,
             req_payload: req.payload,
-            current_template: currentTemplate
+            template: template,
+            template_custom: templateCustom
             //content: files
           }
           if (!templateDirExist) {
