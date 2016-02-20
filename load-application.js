@@ -151,7 +151,8 @@ module.exports = function(app) {
     swig.setDefaults({locals: defaults});
     var templateDirExist = fs.existsSync('template');
     if (~url.indexOf('/github/events') || !templateDirExist) {
-      var currentTemplate = conf.get('store_meta_dictionary').current_template;
+      var template = conf.get('store_meta_dictionary').template;
+      var templateCustom = conf.get('store_meta_dictionary').template_custom;
       if (templateDirExist) {
         conf.clear('items');
       }
@@ -159,9 +160,10 @@ module.exports = function(app) {
       if (req.body && req.body.payload) {
         var payload = JSON.parse(req.body.payload);
         repoName = payload.repository.name;
+      } else if (!templateDirExist) {
+        repoName = template;
       } else {
-        repoName = currentTemplate;
-        // repoName = 'cloudpen-template-basic';
+        repoName = templateCustom;
       }
       helper.installTemplate(repoName, function(err, files) {
         if(err) {
