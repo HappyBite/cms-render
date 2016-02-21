@@ -165,7 +165,7 @@ module.exports = function(app) {
       } else {
         repoName = templateCustom;
       }
-      helper.installTemplate(repoName, function(err, files) {
+      helper.installTemplate(repoName, templateDirExist, function(err, files) {
         if(err) {
           res.send(err);
         } else {
