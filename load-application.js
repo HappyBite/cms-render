@@ -176,8 +176,8 @@ module.exports = function(app) {
             req_query: req.query,
             req_payload: req.payload,
             template: template,
-            template_custom: templateCustom
-            // content: files
+            template_custom: templateCustom,
+            content: files
           }
           if (!templateDirExist) {
             res.redirect('/');
