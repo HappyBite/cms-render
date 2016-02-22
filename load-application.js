@@ -177,7 +177,7 @@ module.exports = function(app) {
             req_payload: req.payload,
             template: template,
             template_custom: templateCustom
-            //content: files
+            // content: files
           }
           if (!templateDirExist) {
             res.redirect('/');
