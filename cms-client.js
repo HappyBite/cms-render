@@ -1,4 +1,4 @@
-if(process.env.PUBLIC) {
+if(process.env.NODE_ENV) {
   var cms = require('./bower_components/sdk/index.js');
   var client = new cms.Client({
     store: process.env.STORE_ID,
