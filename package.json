@@ -12,7 +12,6 @@
   },
   "scripts": {
     "start": "node server",
-    "start-dev": "grunt",
     "postinstall": "rm -rf bower_components && node_modules/bower/bin/bower --allow-root install"
   },
   "author": "Gabriel Lantz <cms.io>",
