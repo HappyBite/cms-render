@@ -5,6 +5,7 @@
     "node": "4.2.1",
     "npm": "3.7.5"
   },
+  "unsafe-perm": true,
   "main": "server.js",
   "repository": {
     "type": "git",
