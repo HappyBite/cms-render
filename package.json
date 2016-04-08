@@ -30,8 +30,7 @@
     "octonode": "^0.6.18",
     "swig": "^1.4.2",
     "swig-extras": "0.0.1",
-    "superagent": "^1.2.0",
-    "sync": "^0.2.5"
+    "superagent": "^1.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.4.0",
