@@ -5,9 +5,6 @@
     "node": "4.2.1",
     "npm": "3.7.5"
   },
-  "config": {
-    "unsafe-perm": true
-  },
   "main": "server.js",
   "repository": {
     "type": "git",
@@ -17,7 +14,7 @@
     "start": "node server",
     "start-dev": "grunt",
     "build": "babel babel-test/scripts/ --watch --out-file babel-test/lib/bundle.js",
-    "postinstall": "./.postinstall --allow-root"
+    "postinstall": "rm -rf bower_components & bower install --allow-root"
   },
   "author": "Gabriel Lantz <cms.io>",
   "license": "MIT",
