@@ -1,1 +1,0 @@
-SDK - Software Development Kit for Cloud10
