@@ -14,7 +14,7 @@
     "start": "node server",
     "start-dev": "grunt",
     "build": "babel babel-test/scripts/ --watch --out-file babel-test/lib/bundle.js",
-    "postinstall": "./.postinstall"
+    "postinstall": "./.postinstall --allow-root"
   },
   "author": "Gabriel Lantz <cms.io>",
   "license": "MIT",
