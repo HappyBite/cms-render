@@ -1,5 +1,6 @@
 {
   "name": "cms-render",
+  "version": "0.0.1",
   "engines": {
     "node": "4.2.1",
     "npm": "3.7.5"
