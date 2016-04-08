@@ -14,7 +14,7 @@
     "start": "node server",
     "start-dev": "grunt",
     "build": "babel babel-test/scripts/ --watch --out-file babel-test/lib/bundle.js",
-    "postinstall": "rm -rf bower_components && npm install -g bower &&  bower install --allow-root"
+    "postinstall": "rm -rf bower_components && ./node_modules/bower/lib/bin/bower install --allow-root"
   },
   "author": "Gabriel Lantz <cms.io>",
   "license": "MIT",
