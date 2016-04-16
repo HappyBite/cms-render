@@ -57,7 +57,7 @@ module.exports = function(app) {
         var assets = results.assets;
         var item_dictionary = {};
         var asset_dictionary = {};
-        var store_meta_dictionary = {};
+        var bucket_meta_dictionary = {};
         var routes = {};
         var pageRoutes = {};
         var startPage;
@@ -88,11 +88,11 @@ module.exports = function(app) {
         }
 
         /**
-         * Set store meta dictionary
+         * Set bucket meta dictionary
          */
         for (var i = 0; i < meta.length; i++) {
-          var storeMeta = meta[i];
-          store_meta_dictionary[storeMeta.id] = storeMeta.attributes.value;
+          var bucketMeta = meta[i];
+          bucket_meta_dictionary[bucketMeta.id] = bucketMeta.attributes.value;
         }
          
         /**
@@ -122,7 +122,7 @@ module.exports = function(app) {
         conf.set('assets', assets);
         conf.set('item_dictionary', item_dictionary);
         conf.set('asset_dictionary', asset_dictionary);
-        conf.set('store_meta_dictionary', store_meta_dictionary);
+        conf.set('bucket_meta_dictionary', bucket_meta_dictionary);
         conf.set('routes', routes);
         conf.set('page_routes', pageRoutes);
         firstLoad = true;
@@ -151,8 +151,8 @@ module.exports = function(app) {
     swig.setDefaults({locals: defaults});
     var templateDirExist = fs.existsSync('template');
     if (~url.indexOf('/github/events') || !templateDirExist) {
-      var template = 'cloudpen-template-' + conf.get('store_meta_dictionary').template;
-      var templateCustom = conf.get('store_meta_dictionary').template_custom;
+      var template = 'cloudpen-template-' + conf.get('bucket_meta_dictionary').template;
+      var templateCustom = conf.get('bucket_meta_dictionary').template_custom;
       if (templateDirExist) {
         conf.clear('items');
       }

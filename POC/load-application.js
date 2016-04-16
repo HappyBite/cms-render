@@ -20,7 +20,7 @@ module.exports = function(app) {
     //   //app.cache = {};
     //   //process.exit(1);
     //   res.header('Cache-Control', 'max-age=0, must-revalidate');
-    //   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    //   res.header('Cache-Control', 'private, no-cache, no-bucket, must-revalidate');
     //   res.header('Expires', '-1');
     //   res.header('Pragma', 'no-cache');
     //   res.removeHeader('Content-Length');
