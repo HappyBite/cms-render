@@ -10,7 +10,7 @@ module.exports = function(app) {
   var firstLoad = false;
    
   app.use(function(req, res, next) {
-    if (!conf.get('items')) {   
+    if (!conf.get('items')) {
       console.log('This will only show once!'); 
       async.parallel({
         item_types: function(callback) {
