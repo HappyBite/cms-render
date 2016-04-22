@@ -10,10 +10,10 @@ var utils = require('./utils');
  * @example
  * {{ 'items' | resource('type=blog-post') }}
  * 
- * @param {string} item-types | items | meta | assets
+ * @param {string} item-types | items | meta | media
  * @param {string} type=blog-post
  * 
- * @return {object} item-types | items | meta | assets
+ * @return {object} item-types | items | meta | media
  */
 swig.setFilter('resource', function (resource, query) {
   var res;
@@ -36,7 +36,7 @@ swig.setFilter('resource', function (resource, query) {
  * item.attributes.image | include
 
  * @param  {object} property {data: {type: 'items', id: 'slider-1'}}
- * @return {object} item/s or asset/s
+ * @return {object} item/s or media/s
  */
 swig.setFilter('include', function (property) {
   var relations;
@@ -45,8 +45,8 @@ swig.setFilter('include', function (property) {
   if(typeof property.data === 'undefined') {
     return;
   }
-  if(property.data.type === 'assets') {
-    itemDictionary = cache.get('asset_dictionary');
+  if(property.data.type === 'media') {
+    itemDictionary = cache.get('media_dictionary');
   } else {
     itemDictionary = cache.get('item_dictionary');  
   }
@@ -74,12 +74,12 @@ swig.setFilter('include', function (property) {
  * Yields the media url for the requested media item
  * @param {string} id
  */
-swig.setFilter('asset_url', function (id) {
-  var assetDictionary = cache.get('asset_dictionary');
-  if(typeof assetDictionary[id] === 'undefined') {
+swig.setFilter('media_item_url', function (id) {
+  var mediaDictionary = cache.get('media_dictionary');
+  if(typeof mediaDictionary[id] === 'undefined') {
     return;
   }
-  return assetDictionary[id].attributes.file.url;
+  return mediaDictionary[id].attributes.file.url;
 });
 
 /**

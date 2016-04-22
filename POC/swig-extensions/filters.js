@@ -72,7 +72,7 @@ swig.setFilter('include', function (property) {
   if(typeof property.data === 'undefined') {
     return;
   }
-  if(property.data.type === 'assets') {
+  if(property.data.type === 'media') {
     itemDictionary = cache.get('asset_dictionary');
   } else {
     itemDictionary = cache.get('item_dictionary');  

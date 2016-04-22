@@ -40,8 +40,8 @@ module.exports = function(app) {
             }
           });
         },
-        assets: function(callback) {
-          client.assets({}, function(err, items) {
+        media: function(callback) {
+          client.media({}, function(err, items) {
             if (err) {
               callback(err);
             } else {
@@ -54,9 +54,9 @@ module.exports = function(app) {
         var itemTypes = results.item_types; 
         var items = results.items;
         var meta = results.meta;
-        var assets = results.assets;
+        var media = results.media;
         var item_dictionary = {};
-        var asset_dictionary = {};
+        var media_dictionary = {};
         var bucket_meta_dictionary = {};
         var routes = {};
         var pageRoutes = {};
@@ -80,11 +80,11 @@ module.exports = function(app) {
         } 
         startPage = item_dictionary[startPageId];
         /**
-         * Set asset dictionary
+         * Set media dictionary
          */
-        for (var i = 0; i < assets.length; i++) {
-          var asset = assets[i];
-          asset_dictionary[asset.id] = asset;
+        for (var i = 0; i < media.length; i++) {
+          var mediaItem = media[i];
+          media_dictionary[mediaItem.id] = mediaItem;
         }
 
         /**
@@ -119,9 +119,9 @@ module.exports = function(app) {
         conf.set('item_types', itemTypes);
         conf.set('items', items);
         conf.set('meta', meta);
-        conf.set('assets', assets);
+        conf.set('media', media);
         conf.set('item_dictionary', item_dictionary);
-        conf.set('asset_dictionary', asset_dictionary);
+        conf.set('media_dictionary', media_dictionary);
         conf.set('bucket_meta_dictionary', bucket_meta_dictionary);
         conf.set('routes', routes);
         conf.set('page_routes', pageRoutes);
