@@ -67,6 +67,7 @@ module.exports = function(app) {
           res.send('Failed connection to the API');
           return false;
         }
+        
         /**
          * Set item dictionary
          * Set startpage
@@ -79,6 +80,7 @@ module.exports = function(app) {
           }
         } 
         startPage = item_dictionary[startPageId];
+        
         /**
          * Set media dictionary
          */
@@ -113,6 +115,7 @@ module.exports = function(app) {
             pageRoutes['/' + page.attributes.slug] = {type: 'page', item_type: page.meta.item_type.data.id, path: page.attributes.path}; 
           } 
         }
+        
         /**
          * Set cache
          */ 
@@ -150,7 +153,30 @@ module.exports = function(app) {
     var model = {};
     swig.setDefaults({locals: defaults});
     var templateDirExist = fs.existsSync('template');
-    if (~url.indexOf('/github/events') || !templateDirExist) {
+    if (~url.indexOf('/render/events/update-file')) {
+      helper.updateFile(req.body.file_path, req.body.content, function(err, response) {
+        if(err) {
+          var obj = {
+            message: 'Something went wrong!!!',
+            req_body: req.body,
+            req_query: req.query,
+            status: 500,
+            error: err
+            // data: response
+          }
+          res.send(obj);
+        } else {
+          var obj = {
+            message: 'File was updated successfully!!!',
+            req_body: req.body,
+            req_query: req.query,
+            status: 200
+            // data: response
+          }
+          res.send(obj);
+        }
+      });   
+    } else if (~url.indexOf('/github/events') || !templateDirExist) {
       var template = 'cloudpen-template-' + conf.get('bucket_meta_dictionary').template;
       var templateCustom = conf.get('bucket_meta_dictionary').template_custom;
       if (templateDirExist) {
