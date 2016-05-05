@@ -156,7 +156,7 @@ module.exports = function(app) {
     if (~url.indexOf('/render/events/update-file')) {
       helper.updateFile(req.body.file_path, req.body.content, function(err, response) {
         if(err) {
-          var obj = {
+          var obj = { 
             message: 'Something went wrong!!!',
             req_body: req.body,
             req_query: req.query,
