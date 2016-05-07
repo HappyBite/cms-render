@@ -146,9 +146,22 @@ module.exports = function(app) {
     if(lastCharOnUrl === '/' && url !== '/') {
       url = url.substring(0, url.length - 1);
     }
+    var cmsEdit = "";
+    cmsEdit += "<script type='text/javascript'>";
+    // cmsEdit += "alert('gaga');";
+    // cmsEdit += "if (~location.href.indexOf('cms_edit=true')) {";
+    // cmsEdit += "sessionStorage.cms_edit = true";
+    // cmsEdit += "}";
+    // cmsEdit += "window.top.window.postMessage({'action': 'set_template_current_url', 'value': location.href}, '*');";
+    cmsEdit += "parent.frames['code'] && parent.frames['code'].postMessage({'action': 'set_template_current_url', 'value': location.href}, '*');";
+    cmsEdit += "</script>";
+    if (req.query.cms_edit === 'true') {
+      req.session.cms_edit = true;
+    }
     var defaults = {
       url: url,
-      query: query
+      query: query,
+      cms_edit: req.session.cms_edit ? cmsEdit : ''
     };
     var model = {};
     swig.setDefaults({locals: defaults});
@@ -220,7 +233,7 @@ module.exports = function(app) {
       if (firstLoad) {
         swig.renderFile('template/index.html', model);
       }
-      res.render('index', model);
+      res.render('../index', model);
     } else {
       next();
     }

@@ -9,6 +9,13 @@ var swigExtras = require('swig-extras');
 var dotenv = require('dotenv').load();
 var filters = require('./swig-extensions/filters.js');
 var loadApplication = require('./load-application.js');
+var session = require('express-session');
+
+app.use(session({
+  secret: 'ssshhhhh',
+  resave: true,
+  saveUninitialized: true
+}));
 
 // set config 
 var nconf = require('nconf');
