@@ -188,7 +188,30 @@ module.exports = function(app) {
           }
           res.send(obj);
         }
-      });   
+      });
+    } else if (~url.indexOf('/render/events/delete-file')) {
+      helper.deleteFile(req.body.file_path, function(err, response) {
+        if(err) {
+          var obj = { 
+            message: 'Something went wrong!!!',
+            req_body: req.body,
+            req_query: req.query,
+            status: 500,
+            error: err
+            // data: response
+          }
+          res.send(obj);
+        } else {
+          var obj = {
+            message: 'File was deleted successfully!!!',
+            req_body: req.body,
+            req_query: req.query,
+            status: 200
+            // data: response
+          }
+          res.send(obj);
+        }
+      });
     } else if (~url.indexOf('/github/events') || !templateDirExist) {
       var template = 'cloudpen-template-' + conf.get('bucket_meta_dictionary').template;
       var templateCustom = conf.get('bucket_meta_dictionary').template_custom;
