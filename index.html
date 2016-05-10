@@ -1,2 +1,4 @@
 {% include 'template/index.html' %}
-{{ cms_edit | raw }}
+{% if cms_edit %}
+  <script src="//sdk.cloudpen.io/js/cms-render-0.1.0.js?version={{render_version}}"></script>
+{% endif %}

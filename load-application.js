@@ -128,6 +128,7 @@ module.exports = function(app) {
         conf.set('bucket_meta_dictionary', bucket_meta_dictionary);
         conf.set('routes', routes);
         conf.set('page_routes', pageRoutes);
+        conf.set('version', Date.now());
         firstLoad = true;
         next();
       });
@@ -146,22 +147,24 @@ module.exports = function(app) {
     if(lastCharOnUrl === '/' && url !== '/') {
       url = url.substring(0, url.length - 1);
     }
-    var cmsEdit = "";
-    cmsEdit += "<script type='text/javascript'>";
-    // cmsEdit += "alert('gaga');";
-    // cmsEdit += "if (~location.href.indexOf('cms_edit=true')) {";
-    // cmsEdit += "sessionStorage.cms_edit = true";
-    // cmsEdit += "}";
-    // cmsEdit += "window.top.window.postMessage({'action': 'set_template_current_url', 'value': location.href}, '*');";
-    cmsEdit += "parent.frames['code'] && parent.frames['code'].postMessage({'action': 'set_template_current_url', 'value': location.href}, '*');";
-    cmsEdit += "</script>";
+    // var cmsEdit = "";
+    // cmsEdit += "<script type='text/javascript'>";
+    // // cmsEdit += "alert('gaga');";
+    // // cmsEdit += "if (~location.href.indexOf('cms_edit=true')) {";
+    // // cmsEdit += "sessionStorage.cms_edit = true";
+    // // cmsEdit += "}";
+    // // cmsEdit += "window.top.window.postMessage({'action': 'set_template_current_url', 'value': location.href}, '*');";
+    // cmsEdit += "parent.frames['code'] && parent.frames['code'].postMessage({'action': 'set_template_current_url', 'value': location.href}, '*');";
+    // cmsEdit += "</script>";
     if (req.query.cms_edit === 'true') {
       req.session.cms_edit = true;
     }
     var defaults = {
       url: url,
       query: query,
-      cms_edit: req.session.cms_edit ? cmsEdit : ''
+      version: conf.get('version'),
+      render_version: '0.1.0',
+      cms_edit: req.session.cms_edit === true
     };
     var model = {};
     swig.setDefaults({locals: defaults});
@@ -186,6 +189,7 @@ module.exports = function(app) {
             status: 200
             // data: response
           }
+          conf.set('version', Date.now());
           res.send(obj);
         }
       });

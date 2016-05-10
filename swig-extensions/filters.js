@@ -1,10 +1,10 @@
 var swig = require('swig');
 var async = require('async');
 var client = require('../cms-client.js'); 
-var cache = require('nconf');   
+var cache = require('nconf');
 var querystring = require('querystring');  
 var utils = require('./utils');
- 
+
 /**
  * Yields an API resource
  * @example
@@ -68,6 +68,14 @@ swig.setFilter('include', function (property) {
     }
   }
   return relations;
+});
+
+/**
+ * Yields the asset url for the requested file in assets directory
+ * @param {string} path
+ */
+swig.setFilter('asset_url', function (path) {
+  return '/assets/' + path + '?version=' + cache.get('version');
 });
 
 /**
