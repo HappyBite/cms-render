@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="//getbootstrap.com/favicon.ico">
+
+    <title>Cover Template for Cloud10</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="//getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="//getbootstrap.com/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/start-coding/assets/css/theme.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="//getbootstrap.com/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="//getbootstrap.com/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h3 class="masthead-brand"><a href="">CMS Render</a></h3>
+              <nav>
+                <ul class="nav masthead-nav">
+                  <li class="active"><a href="#">Home</a></li>
+                  {# <li><a href="//cms.cloudpen.io">CMS</a></li>
+                  <li><a href="http://docs.cloud10.apiary.io">API</a></li>
+                  <li><a href="//sdk.cloudpen.io">UI Kit</a></li> #}
+                  <li><a href="#">Help</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+          <div class="inner cover">
+            <h1 class="cover-heading">CMS Render</h1>
+            <p class="lead">Edit your templates with a breaze with CMS Render.</p>
+            {% if success === false %}
+              <p style="color: orange">Validation failed. Input fields were not valid.</p>
+            {% endif %}
+            <form method="post" action="">
+              <input name="action" value="set_env" type="hidden" />
+              <div class="orm-group" style="width: 250px;text-align:cente;display: inline-block;margin-bottom: 20px;">
+                {# <label class="control-label" for="title">
+                  Titel<span class="form-control-required" data-reactid=".0.0.1"> *</span>
+                </label> #}
+                <div style="text-align:left">
+                <label class="control-label" for="title">Bucket ID</label>
+                </div>
+                <input name="bucket_id" value="{{bucket_id}}" class="form-control" type="text" placeholder="Bucket ID" style="idth: 180px;margin-bottom: 5px;loat: left" />
+                <div style="text-align:left">
+                <label class="control-label" for="title">Access token</label>
+                </div>
+                <input name="access_token" value="{{access_token}}" class="form-control" type="text" placeholder="Access token" style="idth: 180px;margin-bottom: 5px;loat: left" />
+                <div style="text-align:left">
+                <label class="control-label" for="title">Repo</label>
+                </div>
+                <input name="repo_name" value="{{repo_name}}" class="form-control" type="text" placeholder="Your Github repo" style="idth: 180px;margin-bottom: 5px;loat: left" />
+                <div style="text-align:left">
+                <label class="control-label" for="title">Local path to templates</label>
+                </div>
+                <input name="repo_path" value="{{repo_path}}" class="form-control" type="text" placeholder="Local path to templates" style="idth: 180px;margin-bottom: 15px;loat: left" />
+                <div style="text-align:left">
+                <label class="control-label" for="title">Optional</label>
+                </div>
+                <input name="local_repo_name" value="{{local_repo_name}}" class="form-control" type="text" placeholder="Local repo name" style="idth: 180px;margin-bottom: 10px;loat: left" />
+                <button class="btn btn-success" style="width: 250px;">Start editing</button>
+              </div>
+            </form>
+            {# <p class="lead">
+              <a href="//cms.cloudpen.io/signup" class="btn btn-lg btn-default">Start editing</a>
+            </p> #}
+          </div>
+
+          <div class="mastfoot">
+            <div class="inner">
+              <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="//getbootstrap.com/assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="//getbootstrap.com/dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="//getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>

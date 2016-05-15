@@ -27,5 +27,6 @@ bower_components
 .env
 .babelrc
 
-# Temaplate
+# Template
 template
+config.json

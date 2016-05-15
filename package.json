@@ -27,6 +27,7 @@
     "fs-extra": "0.26.5",
     "nconf": "^0.7.1",
     "octonode": "^0.6.18",
+    "shelljs": "^0.6.0",
     "swig": "^1.4.2",
     "swig-extras": "0.0.1",
     "superagent": "^1.2.0"

@@ -21,6 +21,11 @@ app.use(session({
 var nconf = require('nconf');
 nconf.argv().env();
 nconf.add('system', {type: 'file', file: 'dummy: has to be here to get set to work'});
+try {
+  nconf.set('config', require('./config.json'));
+} catch (e) {
+  // console.log(e);
+}
 
 // This is where all the magic happens!
 app.engine('html', swig.renderFile);
@@ -49,6 +54,7 @@ var cacheFor = -1;
   cacheFor = 86400000; // one day
 //}
 //app.use(express.static( path.join( __dirname, '/template/assets' ), { maxAge: cacheFor }));
+app.use('/start-coding/assets', express.static( path.join( __dirname, 'start-coding/assets' ), { maxAge: cacheFor }));
 app.use('/assets', express.static( path.join( __dirname, 'template/assets' ), { maxAge: cacheFor }));
 
 loadApplication(app);

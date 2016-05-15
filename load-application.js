@@ -1,15 +1,65 @@
+var express = require('express');
+var path = require('path');
 var swig = require('swig');
 var async = require('async');
 var client = require('./cms-client.js');
 var helper = require('./lib/helper');
 var conf = require('nconf');
 var fs = require('fs');
-  
+
 module.exports = function(app) {    
   
   var firstLoad = false;
    
   app.use(function(req, res, next) {
+    if (req.body.action === 'set_env' || req.url === '/config') {
+      var config = conf.get('config');
+      var bucketId = config && config.env && config.env.bucket_id ?
+                     config.env.bucket_id :
+                     req.body.bucket_id;
+      var accessToken = config && config.env && config.env.access_token ?
+                        config.env.access_token :
+                        req.body.access_token;
+      var repoName = config && config.env && config.env.repo_name ?
+                 config.env.repo_name :
+                 req.body.repo_name;
+      var repoPath = config && config.env && config.env.repo_path ?
+                 config.env.repo_path :
+                 req.body.repo_path;
+      var localRepoName = config && config.env && config.env.local_repo_name ?
+                     config.env.local_repo_name :
+                     req.body.local_repo_name;
+      var model = {
+        bucket_id: bucketId,
+        access_token: accessToken,
+        repo_name: repoName,
+        repo_path: repoPath,
+        local_repo_name: localRepoName 
+      };
+      if (req.body.bucket_id && req.body.bucket_id.length && req.body.access_token && req.body.access_token.length && req.body.repo_name && req.body.repo_name.length && req.body.repo_path && req.body.repo_path.length) {
+        helper.setConfig(req.body.bucket_id, req.body.access_token, req.body.repo_name, req.body.repo_path, req.body.local_repo_name, function(err, response) {
+          model['success'] = true;
+          // res.render('../start-coding/index', model);
+          conf.clear('items');
+          res.redirect('/');
+        });
+      } else {
+        if (req.body.action === 'set_env') {
+          model['success'] = false;
+        }
+        res.render('../start-coding/index', model);
+      }
+      return;
+    }
+    var templateDirExist = fs.existsSync('template');
+    if (!templateDirExist) {
+      if (!process.env.NODE_ENV && !(conf.get('config') && conf.get('config').env && conf.get('config').env.repo_name)) {
+        res.redirect('/config');
+        // var model = {};
+        // res.render('../start-coding/index', model);  
+        return;
+      }
+    }
     if (!conf.get('items')) {
       console.log('This will only show once!'); 
       async.parallel({
@@ -159,17 +209,83 @@ module.exports = function(app) {
     if (req.query.cms_edit === 'true') {
       req.session.cms_edit = true;
     }
+    
+    var templateIndex = 'template/index.html';
+    var templateDirExist = fs.existsSync('template');
+    var config = conf.get('config');
+    if (config) {
+      var repo = config.env.local_repo_name.length ? config.env.local_repo_name : config.env.repo_name;
+      templateDirExist = fs.existsSync(config.env.repo_path + '/' + repo);
+      templateIndex = config.env.repo_path + '/' + repo + '/index.html';
+      app.use('/assets', express.static( path.join(config.env.repo_path, repo + '/assets' ), { maxAge: 86400000 }));
+    }
     var defaults = {
       url: url,
       query: query,
       version: conf.get('version'),
+      template_index: templateIndex,
       render_version: '0.1.0',
       cms_edit: req.session.cms_edit === true
     };
     var model = {};
     swig.setDefaults({locals: defaults});
-    var templateDirExist = fs.existsSync('template');
-    if (~url.indexOf('/render/events/update-file')) {
+    
+    if (!templateDirExist) {
+      var config = conf.get('config');
+      var repoName = config && config.env && config.env.repo_name ?
+                     config.env.repo_name :
+                     conf.get('bucket_meta_dictionary').template_custom;
+      console.log(repoName);
+      helper.gitPull(repoName, function(err, response) {
+        if(err) {
+          var obj = { 
+            message: 'Something went wrong!!!',
+            req_body: req.body,
+            req_query: req.query,
+            status: 500,
+            error: err
+            // data: response
+          }
+          res.send(obj);
+        } else {
+          var obj = {
+            message: 'Git pull was updated successfully!!!',
+            req_body: req.body,
+            req_query: req.query,
+            status: 200
+            // data: response
+          }
+          conf.set('version', Date.now());
+          // res.send(obj);
+          res.redirect('/');
+        }
+      });
+    } else if (~url.indexOf('/render/events/git-pull')) {
+      var repoName = conf.get('bucket_meta_dictionary').template_custom;
+      helper.gitPull(repoName, function(err, response) {
+        if(err) {
+          var obj = { 
+            message: 'Something went wrong!!!',
+            req_body: req.body,
+            req_query: req.query,
+            status: 500,
+            error: err
+            // data: response
+          }
+          res.send(obj);
+        } else {
+          var obj = {
+            message: 'Git pull was updated successfully!!!',
+            req_body: req.body,
+            req_query: req.query,
+            status: 200
+            // data: response
+          }
+          conf.set('version', Date.now());
+          res.send(obj);
+        }
+      });
+    } else if (~url.indexOf('/render/events/update-file')) {
       helper.updateFile(req.body.file_path, req.body.content, function(err, response) {
         if(err) {
           var obj = { 
@@ -216,7 +332,8 @@ module.exports = function(app) {
           res.send(obj);
         }
       });
-    } else if (~url.indexOf('/github/events') || !templateDirExist) {
+    // } else if (~url.indexOf('/github/events') || !templateDirExist) {
+    } else if (~url.indexOf('/github/events')) {
       var template = 'cloudpen-template-' + conf.get('bucket_meta_dictionary').template;
       var templateCustom = conf.get('bucket_meta_dictionary').template_custom;
       if (templateDirExist) {
@@ -258,7 +375,7 @@ module.exports = function(app) {
       
       // Add routes to the context on first load
       if (firstLoad) {
-        swig.renderFile('template/index.html', model);
+        swig.renderFile(templateIndex, model);
       }
       res.render('../index', model);
     } else {
