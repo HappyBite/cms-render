@@ -4,7 +4,6 @@ var cache = require('nconf');
 var querystring = require('querystring'); 
 
 module.exports = {
-  
   /**
    * Filter items
    * Ex. query: type=blog-post&attributes.slug[eq]='bloggpost-1'

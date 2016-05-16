@@ -60,6 +60,9 @@ module.exports = function(app) {
         return;
       }
     }
+    if (~req.url.indexOf('/render/events/clear-cache')) {
+      conf.clear('items');
+    }
     if (!conf.get('items')) {
       console.log('This will only show once!'); 
       async.parallel({
