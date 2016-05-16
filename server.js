@@ -7,6 +7,15 @@ var compression = require('compression');
 var swig = require('swig');
 var swigExtras = require('swig-extras');
 var dotenv = require('dotenv').load();
+// set config - has to be set before loading client
+var nconf = require('nconf');
+nconf.argv().env();
+nconf.add('system', {type: 'file', file: 'dummy: has to be here to get set to work'});
+try {
+  nconf.set('config', require('./config.json'));
+} catch (e) {
+  // console.log(e);
+}
 var filters = require('./swig-extensions/filters.js');
 var loadApplication = require('./load-application.js');
 var session = require('express-session');
@@ -16,16 +25,6 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
-
-// set config 
-var nconf = require('nconf');
-nconf.argv().env();
-nconf.add('system', {type: 'file', file: 'dummy: has to be here to get set to work'});
-try {
-  nconf.set('config', require('./config.json'));
-} catch (e) {
-  // console.log(e);
-}
 
 // This is where all the magic happens!
 app.engine('html', swig.renderFile);

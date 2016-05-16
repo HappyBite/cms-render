@@ -62,6 +62,20 @@ module.exports = function(app) {
     }
     if (~req.url.indexOf('/render/events/clear-cache')) {
       conf.clear('items');
+      var currentCacheObjects = conf.get();
+      for (var cacheKey in currentCacheObjects) {
+        if (~cacheKey.indexOf('swig-')) {
+          conf.clear(cacheKey);
+          console.log('Cleared key: ', cacheKey);    
+        }
+      }
+      var obj = {
+        message: 'Cache cleared successfully',
+        status: 200
+      }
+      res.send(obj);
+      console.log('Cleared cache');
+      // Don´t return here. Continue for setting the cache.
     }
     if (!conf.get('items')) {
       console.log('This will only show once!'); 
