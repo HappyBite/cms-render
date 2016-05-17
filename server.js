@@ -9,7 +9,7 @@ var swigExtras = require('swig-extras');
 var dotenv = require('dotenv').load();
 // set config - has to be set before loading client
 var nconf = require('nconf');
-nconf.argv().env();
+nconf.argv().env(); 
 nconf.add('system', {type: 'file', file: 'dummy: has to be here to get set to work'});
 try {
   nconf.set('config', require('./config.json'));
