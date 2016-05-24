@@ -5,8 +5,8 @@ app.use(bodyParser({limit: '1mb'}));
 var path = require('path');
 var compression = require('compression');
 var swig = require('swig');
-var swigExtras = require('swig-extras');
-var dotenv = require('dotenv').load();
+var swigExtras = require('swig-extras'); 
+var dotenv = require('dotenv').load(); 
 // set config - has to be set before loading client
 var nconf = require('nconf');
 nconf.argv().env(); 
@@ -14,14 +14,14 @@ nconf.add('system', {type: 'file', file: 'dummy: has to be here to get set to wo
 try {
   nconf.set('config', require('./config.json'));
 } catch (e) {
-  // console.log(e);
+  // console.log(e); 
 }
 var filters = require('./swig-extensions/filters.js');
 var loadApplication = require('./load-application.js');
 var session = require('express-session');
 
 app.use(session({
-  secret: 'ssshhhhh',
+  secret: 'ssshhhhh', 
   resave: true,
   saveUninitialized: true
 }));

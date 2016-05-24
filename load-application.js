@@ -12,6 +12,7 @@ module.exports = function(app) {
   var firstLoad = false;
    
   app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
     if (req.body.action === 'set_env' || req.url === '/config') {
       var config = conf.get('config');
       var bucketId = config && config.env && config.env.bucket_id ?
