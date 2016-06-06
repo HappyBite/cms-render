@@ -42,7 +42,7 @@ swig.setFilter('include', function (property) {
   var relations;
   var item;
   var itemDictionary;
-  if(typeof property.data === 'undefined') {
+  if(!property.data) {
     return;
   }
   if(property.data.type === 'media') {

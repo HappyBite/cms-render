@@ -14,7 +14,7 @@ nconf.add('system', {type: 'file', file: 'dummy: has to be here to get set to wo
 try {
   nconf.set('config', require('./config.json'));
 } catch (e) {
-  // console.log(e); 
+  // console.log(e);   
 }
 var filters = require('./swig-extensions/filters.js');
 var loadApplication = require('./load-application.js');
@@ -54,7 +54,8 @@ var cacheFor = -1;
 //}
 //app.use(express.static( path.join( __dirname, '/template/assets' ), { maxAge: cacheFor }));
 app.use('/start-coding/assets', express.static( path.join( __dirname, 'start-coding/assets' ), { maxAge: cacheFor }));
-app.use('/assets', express.static( path.join( __dirname, 'template/assets' ), { maxAge: cacheFor }));
+// app.use('/assets', express.static( path.join( __dirname, 'templates/template-prod/assets' ), { maxAge: cacheFor }));
+app.use('/assets', express.static( path.join( __dirname, 'templates/template-dev/assets' ), { maxAge: cacheFor }));
 
 loadApplication(app);
 

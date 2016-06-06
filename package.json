@@ -26,6 +26,7 @@
     "express-session": "1.7.6",
     "fs-extra": "0.26.5",
     "nconf": "^0.7.1",
+    "node-async-locks": "^1.0.1",
     "octonode": "^0.6.18",
     "shelljs": "^0.6.0",
     "swig": "^1.4.2",
