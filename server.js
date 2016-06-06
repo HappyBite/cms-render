@@ -54,8 +54,8 @@ var cacheFor = -1;
 //}
 //app.use(express.static( path.join( __dirname, '/template/assets' ), { maxAge: cacheFor }));
 app.use('/start-coding/assets', express.static( path.join( __dirname, 'start-coding/assets' ), { maxAge: cacheFor }));
-// app.use('/assets', express.static( path.join( __dirname, 'templates/template-prod/assets' ), { maxAge: cacheFor }));
-app.use('/assets', express.static( path.join( __dirname, 'templates/template-dev/assets' ), { maxAge: cacheFor }));
+app.use('/assets', express.static( path.join( __dirname, 'templates/template-prod/assets' ), { maxAge: cacheFor }));
+// app.use('/assets', express.static( path.join( __dirname, 'templates/template-dev/assets' ), { maxAge: cacheFor }));
 
 loadApplication(app);
 
