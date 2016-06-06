@@ -6,4 +6,8 @@
     <link rel="stylesheet" type="text/css" href="//localhost:8000/css/cms-render-0.1.0.css?version={{render_version}}" />
     <script src="//localhost:8000/js/cms-render-0.1.0.js?version={{render_version}}"></script>
   #}
+  <script>
+    document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] +
+    ':35729/livereload.js?snipver=1"></' + 'script>')
+  </script>
 {% endif %}
