@@ -4,8 +4,9 @@ var swig = require('swig');
 var async = require('async');
 var client = require('./cms-client.js');
 var helper = require('./lib/helper');
-var conf = require('nconf');
 var fs = require('fs');
+var cache = require('nconf');
+var etag = require('etag');
 var AsyncLock = require('node-async-locks').AsyncLock;
 var lock = new AsyncLock();
 
@@ -15,6 +16,27 @@ module.exports = function(app) {
    
   app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
+    
+    // Set etag
+    var cacheKey = 'cached-urls';
+    var etagKey = JSON.stringify(req.url);
+    var etagDictionary;
+    if (cache.get(cacheKey)) {
+      etagDictionary = cache.get(cacheKey);
+    } else {
+      etagDictionary = {}
+    }
+    if (req.headers['if-none-match'] && req.headers['if-none-match'].toString() === etagDictionary[etagKey]) {
+      // console.log('Cached items:' + req.headers['if-none-match']);
+      res.status(304).json();
+      return;
+    }
+    res.setHeader('ETag', etag(etagKey));
+    etagDictionary[etagKey] = etag(etagKey);
+    cache.set(cacheKey, etagDictionary);
+    console.log(cacheKey + ': ' + JSON.stringify(etagDictionary));
+    
+
     if (~req.url.indexOf('/render/events/set-env')) {
       var bucketId = req.query.bucket_id;
       var accessToken = req.query.access_token;
@@ -38,7 +60,7 @@ module.exports = function(app) {
             status: 200
             // data: response
           }
-          conf.set('version', Date.now());
+          cache.set('version', Date.now());
           res.send(obj);
           // console.log('Japp');
         }
@@ -46,11 +68,14 @@ module.exports = function(app) {
       return;
     }
     if (~req.url.indexOf('/render/events/clear-cache')) {
-      conf.clear('items');
-      var currentCacheObjects = conf.get();
+      cache.clear('items');
+      console.log('Cleared key: ', 'items');    
+      cache.clear('cached-urls');
+      console.log('Cleared key: ', 'cached-urls');
+      var currentCacheObjects = cache.get();
       for (var cacheKey in currentCacheObjects) {
         if (~cacheKey.indexOf('swig-')) {
-          conf.clear(cacheKey);
+          cache.clear(cacheKey);
           console.log('Cleared key: ', cacheKey);    
         }
       }
@@ -63,7 +88,7 @@ module.exports = function(app) {
       // Don´t return here. Continue for setting the cache.
     }
     lock.enter(function(token) {
-      if (!conf.get('items')) {
+      if (!cache.get('items')) {
         console.log('This will only show once!'); 
         async.parallel({
           item_types: function(callback) {
@@ -173,16 +198,16 @@ module.exports = function(app) {
           /**
            * Set cache
            */ 
-          conf.set('item_types', itemTypes);
-          conf.set('items', items);
-          conf.set('meta', meta);
-          conf.set('media', media);
-          conf.set('item_dictionary', item_dictionary);
-          conf.set('media_dictionary', media_dictionary);
-          conf.set('bucket_meta_dictionary', bucket_meta_dictionary);
-          conf.set('routes', routes);
-          conf.set('page_routes', pageRoutes);
-          conf.set('version', Date.now());
+          cache.set('item_types', itemTypes);
+          cache.set('items', items);
+          cache.set('meta', meta);
+          cache.set('media', media);
+          cache.set('item_dictionary', item_dictionary);
+          cache.set('media_dictionary', media_dictionary);
+          cache.set('bucket_meta_dictionary', bucket_meta_dictionary);
+          cache.set('routes', routes);
+          cache.set('page_routes', pageRoutes);
+          cache.set('version', Date.now());
           firstLoad = true;
           lock.leave(token);
           next();
@@ -208,7 +233,7 @@ module.exports = function(app) {
     var templateDirExist = fs.existsSync('templates/template-prod');
     var devTemplateDirExist = fs.existsSync('templates/template-dev');
     if ((!templateDirExist && req.query.env !== 'dev') || (req.query.env === 'dev' && !devTemplateDirExist)) {
-      var repoName = conf.get('bucket_meta_dictionary').template_custom;
+      var repoName = cache.get('bucket_meta_dictionary').template_custom;
       var env = req.query.env === 'dev' ?
                 'dev' :
                 'prod';
@@ -231,7 +256,7 @@ module.exports = function(app) {
             status: 200
             // data: response
           }
-          conf.set('version', Date.now());
+          cache.set('version', Date.now());
           if (req.query.env === 'dev') {
             // res.redirect('/?env=dev');
             res.redirect('/');
@@ -241,7 +266,7 @@ module.exports = function(app) {
         }
       });
     } else if (~url.indexOf('/render/events/git-pull') || ~url.indexOf('/render/events/deploy')) {
-      var repoName = conf.get('bucket_meta_dictionary').template_custom;
+      var repoName = cache.get('bucket_meta_dictionary').template_custom;
       var env = req.query.env;
       var tag = req.query.tag;
       helper.gitPull(repoName, env, tag, function(err, response) {
@@ -263,7 +288,7 @@ module.exports = function(app) {
             status: 200
             // data: response
           }
-          conf.set('version', Date.now());
+          cache.set('version', Date.now());
           res.send(obj);
         }
       });
@@ -278,7 +303,7 @@ module.exports = function(app) {
       var defaults = {
         url: url,
         query: query,
-        version: conf.get('version'),
+        version: cache.get('version'),
         template_index: templateIndex,
         render_version: '0.1.0',
         cms_edit: req.query.env === 'dev'
