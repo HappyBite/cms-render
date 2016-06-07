@@ -18,24 +18,25 @@ module.exports = function(app) {
     res.header('Access-Control-Allow-Origin', '*');
     
     // Set etag
-    var cacheKey = 'cached-urls';
-    var etagKey = JSON.stringify(req.url);
-    var etagDictionary;
-    if (cache.get(cacheKey)) {
-      etagDictionary = cache.get(cacheKey);
-    } else {
-      etagDictionary = {}
+    if (!~req.url.indexOf('/render/events/')) {
+      var cacheKey = 'cached-urls';
+      var etagKey = JSON.stringify(req.url);
+      var etagDictionary;
+      if (cache.get(cacheKey)) {
+        etagDictionary = cache.get(cacheKey);
+      } else {
+        etagDictionary = {}
+      }
+      if (req.headers['if-none-match'] && req.headers['if-none-match'].toString() === etagDictionary[etagKey]) {
+        // console.log('Cached items:' + req.headers['if-none-match']);
+        res.status(304).json();
+        return;
+      }
+      res.setHeader('ETag', etag(etagKey));
+      etagDictionary[etagKey] = etag(etagKey);
+      cache.set(cacheKey, etagDictionary);
+      console.log(cacheKey + ': ' + JSON.stringify(etagDictionary));
     }
-    if (req.headers['if-none-match'] && req.headers['if-none-match'].toString() === etagDictionary[etagKey]) {
-      // console.log('Cached items:' + req.headers['if-none-match']);
-      res.status(304).json();
-      return;
-    }
-    res.setHeader('ETag', etag(etagKey));
-    etagDictionary[etagKey] = etag(etagKey);
-    cache.set(cacheKey, etagDictionary);
-    console.log(cacheKey + ': ' + JSON.stringify(etagDictionary));
-    
 
     if (~req.url.indexOf('/render/events/set-env')) {
       var bucketId = req.query.bucket_id;
