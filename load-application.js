@@ -289,6 +289,7 @@ module.exports = function(app) {
             status: 200
             // data: response
           }
+          cache.clear('cached-urls');
           cache.set('version', Date.now());
           res.send(obj);
         }
