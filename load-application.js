@@ -18,6 +18,9 @@ module.exports = function(app) {
     res.header('Access-Control-Allow-Origin', '*');
     
     // Set etag
+    if (~url.indexOf('/render/events/git-pull') || ~url.indexOf('/render/events/deploy')) {
+      cache.clear('cached-urls');
+    }
     if (!~req.url.indexOf('/render/events/')) {
       var cacheKey = 'cached-urls';
       var etagKey = JSON.stringify(req.url);
@@ -258,15 +261,14 @@ module.exports = function(app) {
           }
           cache.set('version', Date.now());
           if (req.query.env === 'dev') {
-            // res.redirect('/?env=dev');
-            res.redirect('/');
+            res.redirect('/?env=dev');
+            // res.redirect('/');
           } else {
             res.redirect('/');  
           }
         }
       });
     } else if (~url.indexOf('/render/events/git-pull') || ~url.indexOf('/render/events/deploy')) {
-      cache.clear('cached-urls');
       var repoName = cache.get('bucket_meta_dictionary').template_custom;
       var env = req.query.env;
       var tag = req.query.tag;
