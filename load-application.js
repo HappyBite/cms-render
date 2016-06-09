@@ -18,7 +18,7 @@ module.exports = function(app) {
     res.header('Access-Control-Allow-Origin', '*');
     
     // Set etag
-    if (!~req.url.indexOf('/render/events/') && !~req.query.env === 'dev') {
+    if (!~req.url.indexOf('/render/events/') && req.query.env !== 'dev') {
       var cacheKey = 'cached-urls';
       var etagKey = JSON.stringify(req.url);
       var etagDictionary;
