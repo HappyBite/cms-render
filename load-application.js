@@ -266,6 +266,7 @@ module.exports = function(app) {
         }
       });
     } else if (~url.indexOf('/render/events/git-pull') || ~url.indexOf('/render/events/deploy')) {
+      cache.clear('cached-urls');
       var repoName = cache.get('bucket_meta_dictionary').template_custom;
       var env = req.query.env;
       var tag = req.query.tag;
@@ -282,13 +283,12 @@ module.exports = function(app) {
           res.send(obj);
         } else {
           var obj = {
-            message: 'Git pull was updated successfully!!!',
+            message: 'Git pull was successfully updated!!!',
             req_body: req.body,
             req_query: req.query,
             status: 200
             // data: response
           }
-          cache.clear('cached-urls');
           cache.set('version', Date.now());
           res.send(obj);
         }
