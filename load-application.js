@@ -285,7 +285,7 @@ module.exports = function(app) {
           res.send(obj);
         } else {
           var obj = {
-            message: 'Git pull was successfully updated!!!',
+            message: 'Git pull was successfully updated : )',
             req_body: req.body,
             req_query: req.query,
             status: 200
