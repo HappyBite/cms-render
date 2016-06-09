@@ -18,10 +18,7 @@ module.exports = function(app) {
     res.header('Access-Control-Allow-Origin', '*');
     
     // Set etag
-    if (~req.url.indexOf('/render/events/git-pull') || ~req.url.indexOf('/render/events/deploy')) {
-      cache.clear('cached-urls');
-    }
-    if (!~req.url.indexOf('/render/events/')) {
+    if (!~req.url.indexOf('/render/events/') && !~req.query.env === 'dev') {
       var cacheKey = 'cached-urls';
       var etagKey = JSON.stringify(req.url);
       var etagDictionary;
@@ -259,6 +256,7 @@ module.exports = function(app) {
             status: 200
             // data: response
           }
+          cache.clear('cached-urls');
           cache.set('version', Date.now());
           if (req.query.env === 'dev') {
             res.redirect('/?env=dev');
@@ -291,6 +289,7 @@ module.exports = function(app) {
             status: 200
             // data: response
           }
+          cache.clear('cached-urls');
           cache.set('version', Date.now());
           res.send(obj);
         }
