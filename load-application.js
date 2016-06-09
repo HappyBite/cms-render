@@ -18,7 +18,7 @@ module.exports = function(app) {
     res.header('Access-Control-Allow-Origin', '*');
     
     // Set etag
-    if (~url.indexOf('/render/events/git-pull') || ~url.indexOf('/render/events/deploy')) {
+    if (~req.url.indexOf('/render/events/git-pull') || ~req.url.indexOf('/render/events/deploy')) {
       cache.clear('cached-urls');
     }
     if (!~req.url.indexOf('/render/events/')) {
