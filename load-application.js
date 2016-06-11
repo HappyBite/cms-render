@@ -10,10 +10,17 @@ var etag = require('etag');
 var AsyncLock = require('node-async-locks').AsyncLock;
 var lock = new AsyncLock();
 
+var getHrDiffTime = function(time) {
+  // ts = [seconds, nanoseconds]
+  var ts = process.hrtime(time);
+  // convert seconds to miliseconds and nanoseconds to miliseconds as well
+  return (ts[0] * 1000) + (ts[1] / 1000000);
+};
+
 module.exports = function(app) {    
   
   var firstLoad = false;
-   
+  
   app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     
@@ -35,7 +42,7 @@ module.exports = function(app) {
       res.setHeader('ETag', etag(etagKey));
       etagDictionary[etagKey] = etag(etagKey);
       cache.set(cacheKey, etagDictionary);
-      console.log(cacheKey + ': ' + JSON.stringify(etagDictionary));
+      // console.log(cacheKey + ': ' + JSON.stringify(etagDictionary));
     }
     if (~req.url.indexOf('/render/events/set-env')) {
       var bucketId = req.query.bucket_id;
@@ -222,6 +229,7 @@ module.exports = function(app) {
   
   // Middleware
   app.use(function(req, res, next) {
+    var beforeTime = process.hrtime();
     var url = req.url;
     var query = req.query;
     url = ~url.indexOf('?') ? url.split('?')[0] : url;
@@ -229,7 +237,6 @@ module.exports = function(app) {
     if(lastCharOnUrl === '/' && url !== '/') {
       url = url.substring(0, url.length - 1);
     }
-    
     var templateDirExist = fs.existsSync('templates/template-prod');
     var devTemplateDirExist = fs.existsSync('templates/template-dev');
     if ((!templateDirExist && req.query.env !== 'dev') || (req.query.env === 'dev' && !devTemplateDirExist)) {
@@ -295,7 +302,6 @@ module.exports = function(app) {
         }
       });
     } else if (!~url.indexOf('.')) {
-      // app.use('/assets', express.static( path.join( __dirname, 'templates/template-dev' ), { maxAge: 86400000 }));
       var templateIndex;
       if (req.query.env === 'dev') {
         templateIndex = 'templates/template-dev/index.html';
@@ -317,7 +323,14 @@ module.exports = function(app) {
       if (firstLoad) {
         swig.renderFile(templateIndex, model);
       }
-      res.render('../index', model);
+      if (req.query.env === 'dev') {
+        var renderedTemplate = swig.renderFile('index.html', model);
+        res.send(renderedTemplate.replace(/\/assets\//g, '/dev/assets/'));
+      } else {
+        res.render('../index', model);  
+        // console.log(getHrDiffTime(beforeTime));
+      }
+      // setTimeout(function(){console.log(getHrDiffTime(beforeTime));}.bind(this), 1000);
     } else {
       next();
     }

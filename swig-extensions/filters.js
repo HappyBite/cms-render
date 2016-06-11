@@ -71,7 +71,7 @@ swig.setFilter('include', function (property) {
  * Yields the asset url for the requested file in assets directory
  * @param {string} path
  */
-swig.setFilter('asset_url', function (path) {
+swig.setFilter('asset_url', function (path, query) {
   return '/assets/' + path + '?version=' + cache.get('version');
 });
 
