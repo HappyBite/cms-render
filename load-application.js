@@ -325,7 +325,7 @@ module.exports = function(app) {
       }
       if (req.query.env === 'dev') {
         var renderedTemplate = swig.renderFile('index.html', model);
-        res.send(renderedTemplate.replace(/\/assets\//g, '/dev/assets/'));
+        res.send(renderedTemplate.replace(/"\/assets\//g, '"/dev/assets/'));
       } else {
         res.render('../index', model);  
         // console.log(getHrDiffTime(beforeTime));
