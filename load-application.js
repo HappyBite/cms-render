@@ -24,7 +24,7 @@ module.exports = function(app) {
   app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     
-    // Set etag
+    // Lookup etag
     if (!~req.url.indexOf('/render/events/') && req.query.env !== 'dev') {
       var cacheKey = 'cached-urls';
       var etagKey = JSON.stringify(req.url);
@@ -34,14 +34,15 @@ module.exports = function(app) {
       } else {
         etagDictionary = {}
       }
+      // console.log('etagDictionary: ', etagDictionary);
       if (req.headers['if-none-match'] && req.headers['if-none-match'].toString() === etagDictionary[etagKey]) {
-        // console.log('Cached items:' + req.headers['if-none-match']);
+        console.log('Cached items:' + req.headers['if-none-match']);
         res.status(304).json();
         return;
       }
-      res.setHeader('ETag', etag(etagKey));
-      etagDictionary[etagKey] = etag(etagKey);
-      cache.set(cacheKey, etagDictionary);
+      // res.setHeader('ETag', etag(etagKey));
+      // etagDictionary[etagKey] = etag(etagKey);
+      // cache.set(cacheKey, etagDictionary);
       // console.log(cacheKey + ': ' + JSON.stringify(etagDictionary));
     }
     if (~req.url.indexOf('/render/events/set-env')) {
@@ -323,13 +324,38 @@ module.exports = function(app) {
       if (firstLoad) {
         swig.renderFile(templateIndex, model);
       }
+      var renderedTemplate;
       if (req.query.env === 'dev') {
-        var renderedTemplate = swig.renderFile('index.html', model);
-        res.send(renderedTemplate.replace(/="\/assets\//g, '="/dev/assets/'));
+        renderedTemplate = swig.renderFile('index.html', model);
+        renderedTemplate = renderedTemplate.replace(/="\/assets\//g, '="/dev/assets/')
+        // res.send(renderedTemplate.replace(/="\/assets\//g, '="/dev/assets/'));
       } else {
-        res.render('../index', model);  
+        renderedTemplate = swig.renderFile('index.html', model);
+        // res.send(renderedTemplate);
+        // res.render('../index', model);  
         // console.log(getHrDiffTime(beforeTime));
       }
+      // Set etag
+      if (!~req.url.indexOf('/render/events/') && req.query.env !== 'dev') {
+        var cacheKey = 'cached-urls';
+        var etagKey = JSON.stringify(req.url);
+        var etagDictionary;
+        if (cache.get(cacheKey)) {
+          etagDictionary = cache.get(cacheKey);
+        } else {
+          etagDictionary = {}
+        }
+        // if (req.headers['if-none-match'] && req.headers['if-none-match'].toString() === etagDictionary[etagKey]) {
+        //   // console.log('Cached items:' + req.headers['if-none-match']);
+        //   res.status(304).json();
+        //   return;
+        // }
+        res.setHeader('ETag', etag(renderedTemplate));
+        etagDictionary[etagKey] = etag(renderedTemplate);
+        cache.set(cacheKey, etagDictionary);
+        // console.log('EtagDictionary: ', etagDictionary);
+      }
+      res.send(renderedTemplate);
       // setTimeout(function(){console.log(getHrDiffTime(beforeTime));}.bind(this), 1000);
     } else {
       next();
