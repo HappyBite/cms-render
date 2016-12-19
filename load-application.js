@@ -162,7 +162,7 @@ module.exports = function(app) {
           for (var i = 0; i < items.length; i++) {
             var item = items[i];
             item_dictionary[item.id] = item;
-            if(item.attributes.start_page) {
+            if(item.attributes && item.attributes.start_page) {
               startPageId = item.relationships.page.data.id;
             }
           } 
