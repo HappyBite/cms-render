@@ -9,12 +9,14 @@ var accessToken = config && config.env && config.env.access_token ?
                   process.env.ACCESS_TOKEN;
 
 if(process.env.NODE_ENV) {
-  var cms = require('./bower_components/sdk/index.js');
+  // var cms = require('./bower_components/sdk/index.js');
+  var cms = require('./node_modules/sdk/index.js');
   var client = new cms.Client({
     bucket: bucketId,
     accessToken: accessToken
   });
 } else {
+  // var cms = require('../sdk/index.js');
   var cms = require('../sdk/index.js');
   var client = new cms.Client({
     host: 'localhost',
