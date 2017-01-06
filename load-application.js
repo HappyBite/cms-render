@@ -166,7 +166,9 @@ module.exports = function(app) {
               startPageId = item.relationships.page.data.id;
             }
           } 
-          startPage = item_dictionary[startPageId];
+          if (startPageId) {
+            startPage = item_dictionary[startPageId];
+          }
           
           /**
            * Set media dictionary
@@ -187,8 +189,10 @@ module.exports = function(app) {
           /**
            * Set routes
            */
-          routes['/'] = {type: 'page', item_type: startPage.meta.item_type.data.id, path: '/'};
-          pageRoutes['/'] = startPage;
+          if (startPage) {
+            routes['/'] = {type: 'page', item_type: startPage.meta.item_type.data.id, path: '/'};
+            pageRoutes['/'] = startPage;
+          }
           for (var i = 0; i < items.length; i++) {
             var item = items[i];
             if(item.meta.item_type.data.id === 'nav-menu-item') {
