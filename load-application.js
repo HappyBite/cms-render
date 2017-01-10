@@ -109,7 +109,7 @@ module.exports = function(app) {
             });
           },
           items: function(callback) {
-            client.items({}, function(err, items) {
+            client.items({sort: 'meta.position'}, function(err, items) {
               if (err) { 
                 callback(err);
               } else {
