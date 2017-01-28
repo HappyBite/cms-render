@@ -137,6 +137,13 @@ module.exports = function(app) {
           }
         }, 
         function(err, results) { 
+          if(typeof results.items === 'undefined') {
+            console.log('Failed connection to the API');
+            res.send('Failed connection to the API');
+            lock.leave(token);
+            return false;
+          }
+          
           var itemTypes = results.item_types.data; 
           var items = results.items.data;
           var meta = results.meta.data;
@@ -148,12 +155,6 @@ module.exports = function(app) {
           var pageRoutes = {};
           var startPage;
           var startPageId;
-          if(typeof items === 'undefined') {
-            console.log('Failed connection to the API');
-            res.send('Failed connection to the API');
-            lock.leave(token);
-            return false;
-          }
           
           /**
            * Set item dictionary
