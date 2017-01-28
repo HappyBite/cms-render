@@ -137,10 +137,10 @@ module.exports = function(app) {
           }
         }, 
         function(err, results) { 
-          var itemTypes = results.item_types; 
-          var items = results.items;
-          var meta = results.meta;
-          var media = results.media;
+          var itemTypes = results.item_types.data; 
+          var items = results.items.data;
+          var meta = results.meta.data;
+          var media = results.media.data;
           var item_dictionary = {};
           var media_dictionary = {};
           var bucket_meta_dictionary = {};
