@@ -328,6 +328,7 @@ module.exports = function(app) {
       // Add routes to the context on first load
       if (firstLoad) {
         swig.renderFile(templateIndex, model);
+        // return;
       }
       var renderedTemplate;
       if (req.query.env === 'dev') {
